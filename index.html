@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow of the Arcane</title>
+    <link rel="Stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Start Page -->
+    <div id="startPage">
+    <!-- banner -->
+        <div id="Banner">
+            <p>Shadow of the Arcane</p>
+        </div>
+        <div id="video-container">
+            <video autoplay muted loop id="background-video">
+                <source src="mylivewallpapers-com-Night-Dragon-4K.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <button id="startButton">Start</button>
+    </div>
+
+    <!-- Game Page -->
+<div id="game" style="display: none;">
+    <div id="gameBanner">
+        <p>Shadow of the Arcane</p>
+    </div>
+    <div class="playArea">
+    <div class="playerInfo">
+        <div id="stats">
+            <span class="stat">xp: <Strong><span id="xpText">0</span></Strong></span>
+            <span class="stat">health: <Strong><span id="healthText">100</span></Strong></span>
+            <span class="stat">gold: <Strong><span id="goldText">50</span></Strong></span>
+        </div>
+        <div id="inventory">
+            <span class="stat">Weapons: <Strong><span id="WeaponsText">rusty knife</span></Strong></span>
+            <span class="stat">Potions: <Strong><span id="PotionsText"></span></Strong></span>
+        </div>
+    </div>
+    <div id="monsterStats">
+        <span class="stat">Monster Name: <strong><span id="monsterName"></span></strong>
+        </span>
+        <span class="stat">Monster Health: <strong><span id="monsterHealth"></span></strong>
+        </span>
+        <span class="stat">Monster level: <strong><span id="monsterLevel"></span></strong>
+        </span>
+    </div>
+    
+    <div id="controls">
+        <button id="button1">Go to store</button>
+        <button id="button2">Go to cave</button>
+        <button id="button3">Fight</button>
+    </div>
+    <div id="text">
+   </div>
+
+    </div>
+</div>
+    <script src="script.js"></script>
+</body>
+</html>

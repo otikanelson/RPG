@@ -1,0 +1,210 @@
+@font-face {
+    font-family: 'seagram';
+    src: url('fonts/Seagram tfb.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* --banner-- */
+#Banner p{
+    text-align: center;
+    font-size: 80px;
+    margin: 0;
+    font-family: 'seagram';
+    color: #EdddE0;
+}
+/* ---------- */
+
+/* --gameBanner-- */
+#gameBanner p{
+    text-align: center;
+    font-size: 45px;
+    margin: 0;
+    font-family: 'seagram';
+    color: #d80b30;
+}
+/* ---------- */
+
+/* -----StartPage--------- */
+#video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    background-size: cover;
+}
+
+#background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: 100vh;
+    height: auto;
+    z-index: -1;
+    background-size: cover;
+}
+
+#controls button {
+    font-size: 20px;
+    display: block;
+    font-family: 'seagram';
+    padding: 8px;
+    border-radius: 18px;
+    background-color: rgb(0, 0, 87);
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+
+#startButton {
+    align-self: center;
+    position: absolute;
+    padding: 15px 30px;
+    font-size: 25px;
+    font-family: 'seagram';
+    border-radius: 10px;
+    color: #EdddE0;
+    background-color: #007BFF;
+    cursor: pointer;
+    top: 80%;
+    left: 50%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#startButton:hover {
+    background-color: 007BFF;
+    transform: scale(1.1);
+    top: 80%;
+    left: 50%;
+}
+
+#startButton:active {
+    transform: scale(0.95);
+    top: 80%;
+    left: 50%;
+}
+
+/* ---------------------- */
+
+/* ------------------------GamePage-------------------------- */
+body {
+    background-image: url(challenger-stands-front-spooky-castle-illustration.jpg);
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#text {
+    width: 180.2vh;
+    height: 100vh;
+    border: black solid;
+    border-radius: 20px;
+    background-color: rgba(3, 13, 27, 0.767);
+    color: aliceblue;
+    padding: 10px;
+    font-family: 'Courier New', Courier;
+    font-size: 25px;
+    padding: 30px;
+
+}
+
+ #game {
+    padding: 20px;
+    display: none; 
+    opacity: 0;
+    transition: opacity 1s ease-in-out; 
+}
+
+.playArea{
+    position: fixed;
+    display: flex;
+    align-self: center;
+    width: fit-content;
+    padding: 20px;
+    height: 80vh;
+    text-align: center;
+    background-color: rgba(3, 13, 27, 0.356);
+    color: white;
+    border-radius: 20px;
+    border: black 2px solid;
+    flex-direction: column-reverse;
+}
+
+
+#game.visible {
+    display: flex; 
+    opacity: 1;
+}
+
+#stats {  
+    color: black;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stat{
+    font-size: 20px;
+    font: bold;
+    font-family: 'seagram';
+    margin: 0 0 10px;
+    padding-right: 10px ;    
+}
+
+#inventory {
+    color: black;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-end;
+}
+
+.playerInfo{
+    display: flex;
+    flex: row;
+    justify-content: space-between;
+    background-color: rgba(3, 13, 27, 0.767);
+    border-radius: 20px;
+    border: black solid;
+    padding: 10px;
+}
+
+#controls {
+    margin: 20px 10px 10px 0;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: rgba(3, 13, 27, 0.767);
+    border: black solid;
+    border-radius: 20px;
+}
+
+#controls button{
+    font-size: 20px;
+    display: block;
+    font-family: 'seagram';
+    padding: 8px;
+    border-radius: 18px;
+    background-color: rgb(0, 0, 87);
+}
+
+#monsterStats {
+    display: none;
+    border: 1px black solid;
+    color: white;
+    padding: 5px;
+    background-color: red;
+}
+/* -------------------------------------------------- */
