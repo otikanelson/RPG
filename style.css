@@ -5,7 +5,7 @@
     font-style: normal;
 }
 
-
+/* -----StartPage--------- */
 /* --banner-- */
 #Banner p{
     text-align: center;
@@ -16,17 +16,6 @@
 }
 /* ---------- */
 
-/* --gameBanner-- */
-#gameBanner p{
-    text-align: center;
-    font-size: 45px;
-    margin: 0;
-    font-family: 'seagram';
-    color: #d80b30;
-}
-/* ---------- */
-
-/* -----StartPage--------- */
 #video-container {
     position: fixed;
     top: 0;
@@ -50,18 +39,6 @@
     z-index: -1;
     background-size: cover;
 }
-
-#controls button {
-    font-size: 20px;
-    display: block;
-    font-family: 'seagram';
-    padding: 8px;
-    border-radius: 18px;
-    background-color: rgb(0, 0, 87);
-    opacity: 0;
-    transition: opacity 1s ease-in;
-}
-
 
 #startButton {
     align-self: center;
@@ -90,53 +67,39 @@
     top: 80%;
     left: 50%;
 }
-
 /* ---------------------- */
 
+
+
+
+
+
 /* ------------------------GamePage-------------------------- */
-body {
+html, body {
     background-image: url(challenger-stands-front-spooky-castle-illustration.jpg);
-    background-size: cover;
+    background-size: 250vh;
+    background-repeat: no-repeat;
     margin: 0;
-    padding: 0;
-    height: 100vh;
-    overflow: hidden;
 }
 
-#text {
-    width: 180.2vh;
-    height: 100vh;
-    border: black solid;
-    border-radius: 20px;
-    background-color: rgba(3, 13, 27, 0.767);
-    color: aliceblue;
-    padding: 10px;
-    font-family: 'Courier New', Courier;
-    font-size: 25px;
-    padding: 30px;
-
-}
-
- #game {
-    padding: 20px;
-    display: none; 
-    opacity: 0;
-    transition: opacity 1s ease-in-out; 
-}
-
-.playArea{
-    position: fixed;
-    display: flex;
-    align-self: center;
-    width: fit-content;
-    padding: 20px;
-    height: 80vh;
+/* --gameBanner-- */
+#gameBanner p{
+    height: 12%;
     text-align: center;
-    background-color: rgba(3, 13, 27, 0.356);
-    color: white;
-    border-radius: 20px;
-    border: black 2px solid;
-    flex-direction: column-reverse;
+    font-size: 45px;
+    margin: 0;
+    font-family: 'seagram';
+    color: #d80b30;
+}
+/* ---------- */
+
+#game {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 
 
@@ -145,7 +108,129 @@ body {
     opacity: 1;
 }
 
-#stats {  
+.playArea{
+    height: 80%;
+    width: 100%;
+    background-color: rgba(3, 13, 27, 0.767);
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); 
+    grid-template-rows: repeat(6, 1fr);
+    align-self: center;
+    max-width: 1200px;
+    padding: 20px;
+    margin: 10px auto;
+    text-align: center;
+    background-color: rgba(3, 13, 27, 0.356);
+    color: white;
+    border-radius: 20px;
+    border: black 2px solid;
+}
+
+.Settings {
+    width: 92%;
+    height: 100%; 
+    padding: 5px;
+    background-color: rgba(3, 13, 27, 0.356);
+    border: black solid;
+    border-radius: 20px;
+    grid-row: 1 / span 6; 
+    grid-column: 1 / span 2;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.Settings p {
+    font-family: seagram;
+    font-size: 17px;
+}
+
+.volumeSetting {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 5px 0px 5px;
+    border-radius: 5px;
+    background-color: rgba(3, 13, 27, 0.24);
+    border: rgba(0, 0, 0, 0.178) 2px solid;
+}
+
+#volumeSlider {
+    height: 3px;
+    width: 70%;
+}
+
+.volume {
+    width: 20px;
+    height: 20px;
+}
+
+.story {
+    width: 97%;
+    display: flex;
+    height: 94%;
+    border: black solid;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(3, 13, 27, 0.767);
+    color: aliceblue;
+    padding: 2px 10px;
+    align-items: center;
+    top: 0;
+    grid-row: 1 / 6;
+    grid-column: 3 / 9;
+    flex-direction: column;
+}
+
+#text {
+    width: 95%;
+    height: 90%;
+    font-family: 'Courier New', Courier;
+    font-size: 22px;
+    padding: 20px;
+    background-color: rgba(3, 13, 27, 0.767);
+    border-radius: 20px;
+    margin-top: 10px;
+    word-wrap: break-word;
+}
+
+
+#controls {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#controls button {
+    font-size: 18px;
+    display: block;
+    font-family: 'seagram';
+    margin: 5px 2px 0px;
+    padding: 8px 10px;
+    border: #eddde000 2px solid;
+    border-bottom: rgb(12, 12, 12) 2px solid;
+    border-radius: 10px;
+    background-color: rgba(3, 13, 27, 0.493);
+}
+
+.playerInfo{
+    width: 97%;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(3, 13, 27, 0.767);
+    border-radius: 20px;
+    border: black solid;
+    padding: 10px;
+    align-items: center;
+    flex-direction: row;
+    grid-column: 3 / 9;
+}
+
+#stats { 
     color: black;
     padding: 5px;
     display: flex;
@@ -154,7 +239,7 @@ body {
 }
 
 .stat{
-    font-size: 20px;
+    font-size: 15px;
     font: bold;
     font-family: 'seagram';
     margin: 0 0 10px;
@@ -170,41 +255,60 @@ body {
     align-items: flex-end;
 }
 
-.playerInfo{
-    display: flex;
-    flex: row;
-    justify-content: space-between;
-    background-color: rgba(3, 13, 27, 0.767);
-    border-radius: 20px;
-    border: black solid;
-    padding: 10px;
-}
-
-#controls {
-    margin: 20px 10px 10px 0;
-    padding: 15px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    background-color: rgba(3, 13, 27, 0.767);
-    border: black solid;
-    border-radius: 20px;
-}
-
-#controls button{
-    font-size: 20px;
-    display: block;
-    font-family: 'seagram';
-    padding: 8px;
-    border-radius: 18px;
-    background-color: rgb(0, 0, 87);
-}
-
 #monsterStats {
     display: none;
+    width: 100%;
+    margin: 10px;
+    border-radius: 10px;
     border: 1px black solid;
     color: white;
     padding: 5px;
     background-color: red;
 }
 /* -------------------------------------------------- */
+
+
+/* Loading Animation /*
+
+/* Center the loader on the screen */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f9f9f9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Hide the loader when not active */
+.loader-container.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* The loader itself */
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #3498db; /* Blue */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

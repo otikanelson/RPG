@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shadow of the Arcane</title>
-    <link rel="Stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <div id="loader" class="loader-container">
+        <div class="loader"></div>
+    </div>
     <!-- Start Page -->
-    <div id="startPage">
-    <!-- banner -->
+    <div id="startPage" style="display: none;">
+
+        <div id="video-container">
+    <!-- Banner -->
         <div id="Banner">
             <p>Shadow of the Arcane</p>
         </div>
-        <div id="video-container">
             <video autoplay muted loop id="background-video">
                 <source src="mylivewallpapers-com-Night-Dragon-4K.mp4" type="video/mp4">
                 Your browser does not support the video tag.
@@ -23,42 +26,66 @@
         <button id="startButton">Start</button>
     </div>
 
-    <!-- Game Page -->
-<div id="game" style="display: none;">
-    <div id="gameBanner">
-        <p>Shadow of the Arcane</p>
-    </div>
-    <div class="playArea">
-    <div class="playerInfo">
-        <div id="stats">
-            <span class="stat">xp: <Strong><span id="xpText">0</span></Strong></span>
-            <span class="stat">health: <Strong><span id="healthText">100</span></Strong></span>
-            <span class="stat">gold: <Strong><span id="goldText">50</span></Strong></span>
-        </div>
-        <div id="inventory">
-            <span class="stat">Weapons: <Strong><span id="WeaponsText">rusty knife</span></Strong></span>
-            <span class="stat">Potions: <Strong><span id="PotionsText"></span></Strong></span>
-        </div>
-    </div>
-    <div id="monsterStats">
-        <span class="stat">Monster Name: <strong><span id="monsterName"></span></strong>
-        </span>
-        <span class="stat">Monster Health: <strong><span id="monsterHealth"></span></strong>
-        </span>
-        <span class="stat">Monster level: <strong><span id="monsterLevel"></span></strong>
-        </span>
-    </div>
-    
-    <div id="controls">
-        <button id="button1">Go to store</button>
-        <button id="button2">Go to cave</button>
-        <button id="button3">Fight</button>
-    </div>
-    <div id="text">
-   </div>
 
+
+    <!-- Game Page -->
+        <div id="game" >
+    <audio id="background-audio" muted autoplay loop>
+        <source src="rpg game audio.mp4" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>    
+    <audio id="button-sound" muted autoplay loop>
+        <source src="button-click.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+        <div id="gameBanner">
+            <p>Shadow of the Arcane</p>
+        </div>
+        <div class="playArea">
+            <div class="story">
+                <div id="text"></div>
+                <div id="monsterStats">
+                    <span class="stat">Monster Name: <strong><span id="monsterName"></span></strong></span>
+                    <span class="stat">Monster Health: <strong><span id="monsterHealth"></span></strong></span>
+                    <span class="stat">Monster Level: <strong><span id="monsterLevel"></span></strong></span>
+                </div>
+                <div id="controls">
+                    <button id="button1">Go to store</button>
+                    <button id="button2">Go to cave</button>
+                    <button id="button3">Fight</button>
+                </div>
+            </div>
+            <div class="Settings">
+                <p>Settings</p>
+                <div class="volumeSetting">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6" style="display: none;">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+                      </svg>                      
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="volume">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+                      </svg>  
+                    <input type="range" min="0" max="1" step="0.01" value="0.5" id="volumeSlider">
+                </div>
+            </div>
+            <div class="playerInfo">
+                <div id="stats">
+                    <span class="stat">XP: <strong><span id="xpText">0</span></strong></span>
+                    <span class="stat">Health: <strong><span id="healthText">100</span></strong></span>
+                    <span class="stat">Gold: <strong><span id="goldText">50</span></strong></span>
+                </div>
+                <div id="inventory">
+                    <span class="stat">Weapons: <strong><span id="WeaponsText">Rusty knife</span></strong></span>
+                    <span class="stat">Potions: <strong><span id="PotionsText"></span></strong></span>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-    <script src="script.js"></script>
+
+    <!-- Scripts -->
+    <script src="gamelogic.js"></script>
+    <script src="gameProgress.js"></script>
+    <script src="gameui.js"></script>
+    <script src="playerStats.js"></script>
+    <script src="otherStats.js"></script>
 </body>
 </html>
