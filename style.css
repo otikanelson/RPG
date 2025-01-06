@@ -1,0 +1,577 @@
+@font-face {
+    font-family: 'seagram';
+    src: url('fonts/Seagram tfb.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'EnglishTowne'; /* Replace with your font name */
+    src: url('fonts/EnglishTowne.woff2') format('woff2'), 
+         url('fonts/EnglishTowne.woff') format('woff'),
+         url('fonts/EnglishTowne.ttf') format('truetype'); 
+}
+
+/* -----Start Page--------- */
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Seagram', 'poppins';
+}
+
+#title{
+    font-size: 30px;
+}
+
+#game {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+
+#game.visible {
+    display: flex; 
+    opacity: 1;
+}
+
+ul {
+    list-style: none;
+    background-color: rgba(3, 13, 27, 0.767);
+    display: flex;
+    justify-content: space-around;
+    border-radius: 0px opx 10px 10px;
+}
+
+ul li {
+    display: inline-block;
+    position: relative;
+}
+
+ul li a {
+    display: block;
+    padding: 20px 25px;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-size: 20px;
+}
+
+ul li ul.dropdown li {
+    display: block;
+}
+
+ul li ul.dropdown {
+    width: 100%;
+    background-color: rgba(3, 13, 27, 0.767);
+    position: absolute;
+    z-index: 999;
+    display: none;
+    border-radius: 0px 0px 10px 10px;
+
+}
+
+ul li a:hover {
+    background-color: rgba(3, 13, 27, 0.767);
+}
+
+ul li:hover ul.dropdown {
+    display: block;
+}
+
+/* --banner-- */
+#Banner p{
+    text-align: center;
+    font-size: 80px;
+    margin: 0;
+    font-family: 'seagram';
+    color: #EdddE0;
+}
+/* ---------- */
+
+#video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    background-size: cover;
+}
+
+#background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: 100vh;
+    height: auto;
+    z-index: -1;
+    background-size: cover;
+}
+
+#startButton {
+    align-self: center;
+    position: absolute;
+    padding: 5px 30px;
+    font-size: 25px;
+    font-family: 'seagram';
+    border-radius: 10px;
+    color: #EdddE0;
+    background-color: #007BFF;
+    cursor: pointer;
+    top: 80%;
+    left: 50%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#startButton:hover {
+    background-color: 007BFF;
+    transform: scale(1.1);
+    top: 80%;
+    left: 50%;
+}
+
+#startButton:active {
+    transform: scale(0.95);
+    top: 80%;
+    left: 50%;
+}
+/* ---------------------- */
+
+
+
+
+
+
+/* ------------------------GamePage-------------------------- */
+.navBar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #EdddE0;
+}
+
+.settings {
+    display: block;
+    background-color: #e7dddd;
+    padding: 5px;
+    border: #000000 2px solid;
+    border-radius: 0px 20px 20px 0px;
+    margin: 5px 0px 5px 0px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.459);
+}
+
+.size-6 {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 5px 5px 0px 10px;
+}
+
+.gameTitle p {
+    font-family: 'seagram';
+    font-size: 30px;
+    color: #007BFF;
+    margin: 5px 0px 10px 0px;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    background-color: #e7dddd;
+    padding: 5px;
+    border: #000000 2px solid;
+    border-radius: 20px 0px 0px 20px;
+    padding: 0 35px 0;
+    margin: 5px 0px 5px 0px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.459);
+}
+
+.options svg {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+    }
+
+#Game {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 92%;
+    border-bottom: #000000 1px solid;
+    background-color: #007BFF;;
+    justify-content: space-between;
+}
+
+.storySection {
+    width: 100%;
+    display: flex;
+    border-radius: 10px;
+    background-color: rgba(255, 0, 0, 0.226);
+    flex-direction: column;
+}
+
+.storyNar {
+    width: 97%;
+    height: 100%;
+    padding: 10px;
+    margin: auto;
+    border-radius: 10px;
+    background-color: #e08c0d71;
+    border: #000000 solid;   
+}   
+ 
+.text {
+    width: 98%;
+    height: 94%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: rgba(13, 13, 230, 0.959);
+}
+
+#text {
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgba(13, 13, 230, 0.959);
+    word-wrap: break-word;   
+}
+    
+#dice {
+    width: 30px;
+    height: 30px;
+    position: fixed;
+    border-radius: 10px;
+    background-color: #f10707;
+    transform: translate(5%,-105%);
+    -ms-transform: translate(-50%,-50%);
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out; 
+}   
+
+
+
+#dice.visible {
+    display: flex; 
+    opacity: 1;
+}
+
+.storyFunctions {
+    height: 130px;
+    width: 95%;
+    margin: auto;
+    padding: 20px;
+    background-color: rgba(121, 2, 121, 0.507);
+    border-radius: 10px;
+    border: #000000 solid;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#healthText{
+    align-items: center;
+    margin: 10px;
+}
+
+.equipped {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#equippedText {
+    font-family: 'seagram';
+    font-size: 17px;
+    color: #007BFF;
+    margin-bottom: 2px;
+}
+
+.equippedBox {
+    width: 250px;
+    height: 130px;
+    border-radius: 10px;
+    background-color: #c7a575;
+    border: #000000 2px solid;
+}
+
+.dialogue {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#monsterStats {
+    display: none;
+    width: 90%;
+    height: 16px;
+    font-size: 14px;
+    border-radius: 10px;
+    text-align: center;
+    margin: auto;
+    border: 1px black solid;
+    color: white;
+    padding: 5px;
+    background-color: red;
+}
+
+.dialogueBtns {
+    width: 65%;
+    height: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.dialogueBtns button {
+    height: 30px;
+    width: 100%;
+    font-size: 16px;
+    display: flex;
+    margin-top: 11px;
+    align-items: center;
+    justify-content: center;
+    border: #eddde000 2px solid;
+    border-bottom: rgb(12, 12, 12) 2px solid;
+    border-radius: 10px;
+    background-color: rgba(3, 13, 27, 0.493);
+}
+
+.continueBtn {
+    width: 90px;
+    margin-top: 120px;
+    background-color: #090f4605;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#continueText {
+    display: none;
+}
+
+.playerStats { 
+    width: 40%;
+    height: 100px;
+    background-color: rgba(0, 0, 0, 0.589);
+    padding: 5px;
+    display: flex;
+    margin-right: 10px;
+    border-radius: 10px;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.playerInfo {
+    width: 97%;
+    margin: auto;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(3, 13, 27, 0.767);
+    border-radius: 10px;
+    border: black solid;
+    padding: 10px;
+    align-items: center;
+    flex-direction: row;
+}
+
+.experience {
+    display: flex;
+    flex-direction: row;
+}
+
+.stat{
+    font-size: 15px;
+    font: bold;
+    font-family: 'seagram';
+    margin: 0 0 10px;
+    padding-right: 10px ;    
+}
+
+.xpBar {
+
+}
+
+#xpText {
+    
+}
+
+.health {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#healthBar {
+    
+}
+
+.Money {
+    display: flex;
+    flex-direction: row;
+}
+
+#goldCoin {
+
+}
+
+#goldText {
+    
+}
+
+#inventory {
+    width: 58%;
+    height: 100px;
+    background-color: rgba(0, 0, 0, 0.589);
+    padding: 5px;
+    display: flex;
+    border-radius: 10px;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#characterInfo {
+    width: 40%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: rgb(8, 2, 46);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.char {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #5c595900;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.charName {
+    font-family: 'EnglishTowne';
+    font-size: 35px;
+    color: #1100ff;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.infoImgs {
+    background-size: cover;
+}
+
+.CharImg {
+    width: 420px;
+    height: 520px;
+    border: #000000 2px solid;
+    border-radius: 10px;
+    margin: auto;
+    background-size: cover;
+}
+
+.Info {
+    width: 30px;
+    height: 30px;
+    border: #000000 2px solid;
+    border-radius: 100%;
+    padding: 2px;
+}
+
+.size-5 {
+    width: 20px;
+    height: 20px;
+}
+
+.Info img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.charStats {
+    display: flex;
+    flex-direction: row;
+    background-color: #0a0808;
+    padding: 5px;
+    justify-content: center;
+}
+
+.charStats span { 
+    font-family: EnglishTowne;
+    font-size: 25px;
+    color: #1100ff;
+    margin: 0px 0 0 20px;
+}
+
+/* -------------------------------------------------- */
+
+
+/* Loading Animation /*
+
+/* Center the loader on the screen */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f9f9f9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Hide the loader when not active */
+.loader-container.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* The loader itself */
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #3498db; /* Blue */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
