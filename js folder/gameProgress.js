@@ -1,87 +1,115 @@
-// Initial buttons //
-button1.onclick = goStore;
-button2.onclick = goCave;
-button3.onclick = fightDragon;
-
-text.innerText = "Welcome Dragon Slayer!"
-
-const locations = [
-    {
-        name: "town square",
-        "button functions": [goStore, goCave, fightDragon],
-        "button text": ["Go to Store", "Go to Cave", "Fight"],
-        text: ["You are back in the town square."]
+// Example dialogue structure
+const DIALOGUES = {
+    intro: {
+        name: "intro",
+        texts: [
+            {content: "\"Welcome Rift Walker! I am the Great mage of this region. And you my friend are what is called an \"Avatar\"\"",
+                choices: [
+                    { text: "Who are you...exactly?", nextDialogue: "mageIntro" },
+                    { text: "Where am I?", nextDialogue: "avatarDefined" },
+                    { text: "What is an avatar?", nextDialogue: "avatarDefined"},
+            ]}
+        ]
     },
-    {
-        name: "Store",
-        "button functions": [ buyHealth, buyWeapon, goTown ],
-        "button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Leave the store"],
-        text: ["You quickly jolt into the store."]
+    mageIntro: {
+        name: "mageIntro",
+        texts: [
+            {content: "\"I am V'ial Imdall, i am the mage assigned to keep the peace of this realm. As you can see what a poor job i have done, which is why i need to get back to my business.\""},
+            {content: "You look around for a moment and see yourself among burnt buildings and ash everywhere, you look forward again with the intent to ask Imdall a question",
+                choices: [
+                    { text: "Where am I?", nextDialogue: "avatarDefined"},
+                    { text: "What is an avatar?", nextDialogue: "avatarDefined"}
+                ]}
+            ]
+        },
+    locationInfo: {
+        name: "avatarDefined",
+        texts: [
+            {content: "\"Well, my friend, you are a soul magically embedded in the body of someone from another world. You were likely summoned by this jewel.\""},
+            {content: "The man points at the amulet in your hand, which he had given to you earlier, \"It will help you fix the rift in which you came through and go back home\""},
+            {content: "The people of this world face turmoil as a result of the revival of \"T'Kr\", an ancient deity and i have been trying to infer the cause......."},
+            {content: "My friend, there is no time for further questions, more will be revealed to you as you go, The first shard is said to be hidden in the bazaar, you must find it and maybe...just maybe it might bring about a better situation",
+                choices: [
+                    { text: "Tell me more about avatars", nextDialogue: "avatarExplanation" },
+                    { text: "What happened to the original soul?", nextDialogue: "avatarExplanation" }
+            ]}]
     },
-    {
-        name: "Cave",
-        "button functions": [ stayHidden, lookAround ],
-        "button text": ["stay hidden and wait the fight out", "look around"],
-        text: ["You hurry into the tiny crevice and drop your gear"]
-    },
-    {
-        name: "Battle",
-        "button functions": [ attack, dodge, goTown ],
-        "button text": ["attack", "dodge", "run"],
-        text: ["You engage in battle."]
-    },
-    {
-        name: "Kill monster",
-        "button text": [ "Go to town square", "plunder" ],
-        "button functions": [goTown, easterEgg],
-        text: ["The monster screams \"Arg!\" as it dies. You gain experience point and find gold."]
-    },
-    {
-        name: "lose",
-        "button text": [ "Replay ?" ],
-        "button functions": [ restart ],
-        text: ["You die."]
-    },
-    {
-        name: "Win",
-        "button text": [ "Restart Game" ],
-        "button functions": [ restart ],
-        text: ["You defeat the dragon! YOU WIN!!"]
-    },
-    {
-        name: "easter egg",
-        "button text": [ "2", "3", "Go to town square?" ],
-        "button functions": [ pickTwo, pickThree, goTown ],
-        text: ["You find a secret game, Pick a number above.",
-        "Ten numbers will be randomly chosen between 0 and 10,",
-        "If the number you choose matches one of the random numbers,. YOU WIN!!"]
-    },
-]
-
-function update(location) {
-    monsterStats.style.display = "none";
-
-    button1.innerText = location["button text"][0];
-    button1.onclick = location["button functions"][0];
-    button1.style.display = "inline-block"; 
-    text.innerText = location.text;
-    
-    if (location["button text"].length > 1) {
-        button2.innerText = location["button text"][1];
-        button2.onclick = location["button functions"][1];
-        button2.style.display = "inline-block";
-    } else {
-        button2.style.display = "none"; 
+    avatarExplanation: {
+        name: "avatarExplanation",
+        texts: [
+            {content: "You were brought here by that rift and the amulet, needs a soul to guide and fix it "},
+            {content: "And as for the soul of the body you now reside in, well there's no time for such stories right now\", You ponder as you look around, and you may understand why."},
+            {content: "You look forward again and Imdall is gone, you push your weight off of the floor and step forward, now you just have to find the bazaar. you are stranded, where do you even go from here",
+                choices: [
+                    { text: "Walk forward", nextDialogue: "wrongDirection" },
+                    { text: "Take a look at the amulet", nextDialogue: "rightDirection" }
+                ]}]
     }
-    
-    if (location["button text"].length > 2) {
-        button3.innerText = location["button text"][2];
-        button3.onclick = location["button functions"][2];
-        button3.style.display = "inline-block"; 
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dialogueManager = new DialogueManager();
+    dialogueManager.startDialogue('intro');
+});
+
+function explanation() {
+    update(dialogue[1]);
+}
+
+async function buyHealth() {
+    if (gold >= 10) {
+        gold -= 10;
+        health += 10;
+        goldText.innerText = gold;
+        healthText.innerText = health;
+        let newHealth = Math.min(health + 10, 100);
+        updateHealth(newHealth);
+        button3.innerText = "Leave the store";
+        button3.onclick = goTown;
+        await typeText("You stare at the green bottle on the top most shelf. And the shop keep offers it to you and opens up his wretched hands. Your check you belt pockets and bring out three gold coins, he immediately snatches it from you mitts and scurries along.", text, 30);
     } else {
-        button3.style.display = "none"; 
+        await typeText("You do not seem to have enough gold for this adventurer!!?? The previously grinning shop keep yells almost concerned", text, 30);
+        button1.onclick = goAway;
+        button2.onclick = goAway;
     }
 }
+
+
+async function buyWeapon() {
+    if (currentWeapon < weapons.length - 1) {
+        if (gold >= 30) {
+            gold -= 30;
+            currentWeapon++;
+            goldText.innerText = gold;
+            let newWeapon = weapons[currentWeapon].name;
+            await typeText(`You bought a ${newWeapon}.`, text);
+            inventory.push(newWeapon);
+            updateInventoryDisplay();
+            text.innerText += "\nInventory: " + inventory;
+        } else {
+            await typeText("You do not seem to have enough gold to buy a weapon adventurer!! The formerly grinning shop keep yells almost cross", text);
+            button1.onclick = goAway;
+            button2.onclick = goAway;
+        }
+    } else {
+        await typeText("You already have the most powerful weapon!", text);
+        button2.innerText = "Sell weapon for 15 gold";
+        button2.onclick = sellWeapon;
+    }
+}
+
+document.getElementById('text').addEventListener('click', function() {
+    if (isTyping) {
+        const currentLocation = locations.find(loc => 
+            loc["button text"][0] === button1.innerText &&
+            (loc["button text"][1] === button2.innerText || !loc["button text"][1]) &&
+            (loc["button text"][2] === button3.innerText || !loc["button text"][2])
+        );
+        if (currentLocation) {
+            skipTyping(this, currentLocation.text);
+        }
+    }
+});
 
 
 function goTown() {
@@ -96,45 +124,6 @@ function goCave() {
     update(locations[2]);
 }
 
-function buyHealth() {
-    if (gold >= 10) {
-        gold -= 10;
-        health += 10;
-        goldText.innerText = gold;
-        healthText.innerText = health;
-        button3.innerText = "Leave the store";
-        button3.onclick = goTown;
-        typeText("You stare at the green bottle on the top most shelf. And the shop keep offers it to you and opens up his wretched hands. Your check you belt pockets and bring out three gold coins, he immediately snatches it from you mitts and scurries along.", text, 30)
-    } else {
-        typeText("You do not seem to have enough gold for this adventurer!!?? The previously grinning shop keep yells almost concerned", text, 30);
-        button1.onclick = goAway;
-        button2.onclick = goAway;
-    }
-}
-
-function buyWeapon() {
-    if (currentWeapon < weapons.length - 1){
-        if (gold >= 30) {
-            gold -= 30;
-            currentWeapon ++;
-            goldText.innerText = gold;
-            let newWeapon = weapons[currentWeapon].name;
-            text.innerText = "You bought a " + newWeapon + ".";
-            inventory.push(newWeapon);
-            updateInventoryDisplay();
-            text.innerText += "Inventory: " + inventory;
-        } else {
-            text.innerText = " \"You do not seem to have enough gold to buy a weapon adventurer!!\"\
-            the formerly grinning shop keep yells almost cross";
-            button1.onclick = goAway;
-            button2.onclick = goAway;
-        }
-    } else{ 
-        text.innerText = "You already have the most powerful weapon!";
-        button2.innerText = "Sell weapon for 15 gold";
-        button2.onclick = sellWeapon;
-    }
-}
 function sellWeapon(){
     if (inventory.length > 1){
         gold += 15;
@@ -155,11 +144,7 @@ function leave() {
 function goAway() {
     text.innerText = "You slowly walk out of the store empty handed";
     button1.innerText = "continue";
-    button1.onclick = leave;    
-    button2.innerText = "continue";
-    button2.onclick = leave;
-    button3.innerText = "continue";
-    button3.onclick = leave;
+    button1.onclick = leave;
 }
 
 function stayHidden(){
@@ -277,7 +262,7 @@ function restart(){
     health = 100;
     gold = 50;
     currentWeapon = 0;
-    inventory = ["stick"];
+    inventory = ["Rusty Knife"];
     goldText.innerText = gold;
     healthText.innerText = health;
     xpText.innerText = xp;

@@ -1,11 +1,17 @@
 // // -----playerStats--------
-let xp = 0;
 let health = 100;
 let gold = 50;
 let currentWeapon = 0;
 let fighting;
-let inventory = [ "rusty knife" ];
+let inventory = [ "Rusty knife" ];
+let level = 1;
+let maxXP = 1000;
+let currentXP = 0;
 
+// Get DOM elements
+const xpBar = document.querySelector('.xpBar');
+const levelText = document.getElementById('level');
+const healthBar = document.querySelector('.healthBar');
 const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
@@ -17,7 +23,7 @@ const monsterNameText = document.querySelector("#monsterName");
 const monsterStats = document.querySelector("#monsterStats");
 const monsterLevelText = document.querySelector("#monsterLevel");
 const monsterHealthText = document.querySelector("#monsterHealth");
-const weaponsText = document.querySelector("#WeaponsText");
+const weaponsText = document.querySelector("#weaponsText");
 const weapons = [
     {name: "rusty knife", price: 20, power: 5},
     {name: "dagger", price: 35, power: 40},
