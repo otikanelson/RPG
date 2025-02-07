@@ -9,9 +9,9 @@
 
 </head>
 <body>
-    <div id="loader" class="loader-container">
+    <!-- <div id="loader" class="loader-container">
         <div class="loader"></div>
-    </div>
+    </div> -->
     <div class="container">
         <div id="popup1" class="popup">
             <h2>Settings</h2><br>
@@ -50,11 +50,11 @@
 </div>
 
     <!-- Start Page -->
-    <div id="startPage" style="display: none;">
+    <div id="startPage" >
 
 
     <!-- navbar -->
-    <nav>
+    <nav class="NavBar">
         <ul>
         <li>
             <a href="#">Settings ▾</a>
@@ -84,7 +84,7 @@
             <audio id="background-audio" muted autoplay loop>
                 <source src="Assets/rpg game audio.mp4" type="audio/mpeg">
                 Your browser does not support the audio element.
-            </audio>    
+            </audio> 
             <audio id="button-sound" muted autoplay loop>
                 <source src="Assets/button-click.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
@@ -114,6 +114,12 @@
     </button>
 </nav>
 
+    <div class="narration-container" style="display: none;">
+        <div class="page active">
+            <div class="narration"></div>
+        </div>
+    </div>
+
     <div id="Game">
         <div class="storySection">
             <div class="storyNar">
@@ -127,13 +133,22 @@
             <div class="storyFunctions">
                 <div class="equipped">
                     <span id="equippedText">Equipped Items</span>
-                    <div class="equippedBox"><img src=""></div>
+                    <div class="equippedBox">
+                    </div>
                 </div>
                 <div class="dialogue">
                     <div id="monsterStats">
-                        <span class="stat">Monster Name: <strong><span id="monsterName"></span></strong></span>
-                        <span class="stat">Monster Health: <strong><span id="monsterHealth"></span></strong></span>
-                        <span class="stat">Monster Level: <strong><span id="monsterLevel"></span></strong></span>
+                        <div class="monster-health-container">
+                            <span class="stat" id="monsterName"></span>
+                            <div class="health">
+                                <span></span>
+                                <div class="progress-container">
+                                    <div class="progress-bar monsterHealthBar"></div>
+                                </div>
+                                <strong><span id="monsterHealth"></span></strong>
+                            </div>
+                            <span class="stat">Level  <strong><span id="monsterLevel"></span></strong></span>
+                        </div>
                     </div>
                     <div class="dialogueBtns">
                         <button id="button1"></button>
@@ -143,38 +158,38 @@
                 </div>
             </div>
 
-        <div class="playerInfo">
-            <div class="playerStats">
-                <div class="experience">
-                    <span class="stat">Xp: </span>
-                    <div class="progress-container">
-                        <div class="progress-bar xpBar"></div>
+            <div class="playerInfo">
+                <div class="playerStats">
+                    <div class="experience">
+                        <span class="stat">Level: </span>
+                        <div class="progress-container">
+                            <div class="progress-bar xpBar"></div>
+                        </div>
+                        <strong><span id="xpText"></span></strong>
                     </div>
-                    <strong><span id="xpText">1</span></strong>
-                </div>
-                <div class="health">
-                    <span class="stat">Health:</span>
-                    <div class="progress-container">
-                        <div class="progress-bar healthBar"></div>
+                    <div class="health">
+                        <span class="stat">Health:</span>
+                        <div class="health-bar-container">
+                            <div class="healthBar"></div>
+                        </div>
+                        <strong><span id="healthText">100</span></strong>
                     </div>
-                    <strong><span id="healthText">100</span></strong>
+                    <div class="Money">
+                        <span class="stat">Gold:</span>
+                        <img id="goldCoin" src="Assets/goldImg.png">
+                        <strong><span id="goldText">50</span></strong>
+                    </div>
                 </div>
-                <div class="Money">
-                    <span class="stat">Gold:</span>
-                    <img id="goldCoin" src="Assets/goldImg.png">
-                    <strong><span id="goldText">50</span></strong>
+                <div id="inventory">
+                    <div id="collection" class="WeaponsCollection">
+                        <strong><span class="stat">Weapons: </strong></span><span id="weaponsText">Rusty knife</span>
+                        <img>
+                    </div>
+                    <div id="collection" class="PotionsCollection">
+                        <strong><span class="stat">Potions: </strong></span><span id="potionsText"></span>
+                    </div>
                 </div>
             </div>
-            <div id="inventory">
-                <div id="collection" class="WeaponsCollection">
-                    <strong><span class="stat">Weapons: </strong></span><span id="weaponsText">Rusty knife</span>
-                    <img>
-                </div>
-                <div id="collection" class="PotionsCollection">
-                    <strong><span class="stat">Potions: </strong></span><span id="potionsText"></span>
-                </div>
-            </div>
-        </div>
         </div>
         <div id="characterInfo" style="display: none;">
             <div class="char">
@@ -184,16 +199,21 @@
                     </svg>
                 </button>
             </div>
-            <div class="infoImgs">
-            <img class="CharImg" src="Assets/V'ial Imdall.jpg">
-            <img class="descrImg" style="display: none;" src="">
+            <div id="Info">
+                <div class="descr" style="display: none;">
+                    <p class="descrText">
+                </div>
+                <img class="CharImg" >
             </div>
             <div class="charInfo" >
                 <div class="charStats">
                     <div class="charLevel">
                         <span class="stat">Legendary</span>
-                        <div class="progress-container">
-                            <div class="progress-bar healthBar"></div>
+                        <div class="health">
+                            <div class="health-bar-container">
+                                <div class="healthBar"></div>
+                            </div>
+                        </div>
                         </div>
                         <img id="levelImage" src="Assets/level emblem.png">
                     </div>
@@ -204,10 +224,19 @@
 </div>
 
 
-    <script link="script" src="js folder/gameLogic.js"></script>
-    <script link="script" src="js folder/gameProgress.js"></script>
-    <script link="script" src="js folder/gameUI.js"></script>
-    <script link="script" src="js folder/playerStats.js"></script>
-    <script link="script" src="js folder/otherStats.js"></script>
+<script type="module" src="js folder/GameAudio.js"></script> 
+<script type="module" src="js folder/GameLogic.js"></script>
+<script type="module" src="js folder/GameStorage.js"></script>
+<script type="module" src="js folder/GameSettings.js"></script>
+<script type="module" src="js folder/GameTransitions.js"></script>
+<script type="module" src="js folder/TextDesignManager.js"></script>
+<script type="module" src="js folder/ProgressManager.js"></script>
+<script type="module" src="js folder/DialogueManager.js"></script>
+<script type="module" src="js folder/BattleDialogue.js"></script>
+<script type="module" src="js folder/BattleLogic.js"></script>
+<script type="module">
+    import DialogueManager from './js folder/ProgressManager.js';
+
+</script>
 </body>
 </html>
