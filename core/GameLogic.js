@@ -28,24 +28,27 @@ class GameLogic {
             'Rusty Knife': {
                 damage: 5,
                 cost: 0,
-                image: 'Assets/Rustyknife.png'
+                image: 'Assets/Rustyknife.png',
+                type: 'dagger'  // ADDED
             },
             'Short Sword': {
                 damage: 10,
                 cost: 30,
-                image: 'Assets/shortSword.png'
+                image: 'Assets/shortSword.png',
+                type: 'sword'  // ADDED
             },
             'Steel Axe': {
                 damage: 15,
                 cost: 50,
-                image: 'assets/Steel Axe.png'
+                image: 'assets/Steel Axe.png',
+                type: 'axe'  // ADDED
             }
         };
 
         // Initialize inventory - MOVED THIS BEFORE setting equippedPotion
         this.inventory = {
-            healthPotions: 0,
-            weapons: ['Rusty Knife' , 'Short Sword', 'Steel Axe'],
+            healthPotions: 2,
+            weapons: ['Rusty Knife', 'Short Sword', 'Steel Axe'],
             equippedWeapon: '',
             equippedPotion: null  // Added here instead of trying to set it separately
         };
@@ -161,6 +164,18 @@ class GameLogic {
     getWeaponDamage() {
         const weapon = this.weapons[this.inventory.equippedWeapon];
         return weapon ? weapon.damage : 1;
+    }
+
+    /**
+     * Get the type of the equipped weapon
+     * @returns {string} - Weapon type (sword, axe, dagger) or 'default'
+     */
+    getWeaponType() {
+        const equippedWeapon = this.inventory.equippedWeapon;
+        if (!equippedWeapon || !this.weapons[equippedWeapon]) {
+            return 'default';
+        }
+        return this.weapons[equippedWeapon].type || 'default';
     }
 
     // Item management

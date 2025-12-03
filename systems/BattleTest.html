@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle System Phase 1 Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1a1003;
+            color: #EdddE0;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #5f0cbd;
+            border-radius: 8px;
+            background: rgba(8, 2, 61, 0.3);
+        }
+        
+        h1, h2 {
+            color: #5f0cbd;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #5f0cbd;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #4a099d;
+        }
+        
+        .log {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #5f0cbd;
+        }
+        
+        .log-entry.error {
+            border-left-color: #ff4444;
+            color: #ff8888;
+        }
+        
+        .log-entry.success {
+            border-left-color: #44ff44;
+            color: #88ff88;
+        }
+        
+        .log-entry.info {
+            border-left-color: #4444ff;
+            color: #8888ff;
+        }
+        
+        .state-display {
+            background: rgba(95, 12, 189, 0.2);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .state-display strong {
+            color: #5f0cbd;
+        }
+        
+        #monsterStats {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(8, 2, 61, 0.9);
+            padding: 15px;
+            border: 2px solid #5f0cbd;
+            border-radius: 8px;
+            min-width: 200px;
+        }
+        
+        .monsterHealthBar {
+            height: 20px;
+            background: linear-gradient(to bottom, #44ff44 0%, #33dd33 50%, #22bb22 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        #dice {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 72px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 Battle System - Phase 1 Test</h1>
+    <p>Testing: Turn Flow & State Management</p>
+    
+    <div class="test-section">
+        <h2>Test Controls</h2>
+        <button onclick="startTestBattle()">Start Test Battle (Slime Beast)</button>
+        <button onclick="clearLog()">Clear Log</button>
+        <button onclick="checkBattleState()">Check Battle State</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Battle State</h2>
+        <div id="stateDisplay" class="state-display">
+            <strong>Battle State:</strong> <span id="battleState">NOT_STARTED</span><br>
+            <strong>Current Actor:</strong> <span id="currentActor">None</span><br>
+            <strong>Declared Action:</strong> <span id="declaredAction">None</span><br>
+            <strong>Responding Action:</strong> <span id="respondingAction">None</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Console Log</h2>
+        <div id="testLog" class="log"></div>
+    </div>
+    
+    <!-- Monster Stats Display -->
+    <div id="monsterStats">
+        <h3 id="monsterName">Monster</h3>
+        <p>HP: <span id="monsterHealth">100</span></p>
+        <p>Level: <span id="monsterLevel">1</span></p>
+        <div style="background: #333; height: 20px; border-radius: 4px; overflow: hidden;">
+            <div class="monsterHealthBar" style="width: 100%;"></div>
+        </div>
+    </div>
+    
+    <!-- Dice Element -->
+    <div id="dice">🎲</div>
+    
+    <script type="module">
+        import { BattleManager } from './BattleLogic.js';
+        
+        // Mock dice element properly
+        const mockDiceElement = document.getElementById('dice');
+        mockDiceElement.play = function() {
+            log('🎲 Dice animation playing...', 'info');
+        };
+        mockDiceElement.pause = function() {
+            log('🎲 Dice animation paused', 'info');
+        };
+        
+        // Mock gameLogic and textManager for testing
+        const mockGameLogic = {
+            stats: {
+                health: 100,
+                maxHealth: 100,
+                level: 3
+            },
+            inventory: {
+                equippedWeapon: 'Short Sword',
+                weapons: ['Rusty Knife', 'Short Sword'],
+                healthPotions: 2
+            },
+            weapons: {
+                'Rusty Knife': { damage: 5, image: '' }, // Empty image to avoid 404
+                'Short Sword': { damage: 10, image: '' }
+            },
+            getWeaponDamage() {
+                return this.weapons[this.inventory.equippedWeapon]?.damage || 5;
+            },
+            equipWeapon(weapon) {
+                this.inventory.equippedWeapon = weapon;
+                log('⚔️ Equipped: ' + weapon, 'info');
+            },
+            takeDamage(amount) {
+                this.stats.health = Math.max(0, this.stats.health - amount);
+                log('💔 Player takes ' + amount + ' damage. HP: ' + this.stats.health, 'error');
+            },
+            modifyGold(amount) {
+                log('💰 Gold +' + amount, 'success');
+            },
+            addExperience(amount) {
+                log('⭐ XP +' + amount, 'success');
+                return this.stats.level;
+            }
+        };
+        
+        const mockTextManager = {
+            async typeText(text) {
+                log('📝 TEXT: ' + text, 'info');
+                return Promise.resolve();
+            },
+            showButtons(choices) {
+                log('🎮 CHOICES: ' + choices.map(c => c.text).join(', '), 'info');
+                updateStateDisplay();
+                
+                // Auto-simulate clicking first choice for testing
+                setTimeout(() => {
+                    if (choices.length > 0 && window.battleManager.battleState !== 'VICTORY' && 
+                        window.battleManager.battleState !== 'DEFEAT') {
+                        simulatePlayerChoice(choices[0]);
+                    }
+                }, 2000);
+            }
+        };
+        
+        // Create battle manager
+        window.battleManager = new BattleManager(mockGameLogic, mockTextManager);
+        
+        // Override onBattleReady to auto-start
+        window.battleManager.onBattleReady = async function() {
+            log('⚔️ === BATTLE READY - Starting Battle Phase ===', 'success');
+            const result = await this.beginBattlePhase();
+            
+            if (result) {
+                await mockTextManager.typeText(result.text);
+                mockTextManager.showButtons(result.choices);
+            }
+        };
+        
+        // Simulate player choice
+        window.simulatePlayerChoice = async function(choice) {
+            log('🎯 Auto-selecting: ' + choice.text, 'info');
+            
+            try {
+                const result = await window.battleManager.handlePlayerAction(
+                    choice.action, 
+                    choice.params?.actionName || choice.text
+                );
+                
+                if (result) {
+                    await mockTextManager.typeText(result.text);
+                    if (result.choices) {
+                        mockTextManager.showButtons(result.choices);
+                    }
+                }
+            } catch (error) {
+                log('❌ ERROR: ' + error.message, 'error');
+                console.error(error);
+            }
+        };
+        
+        // Make functions global
+        window.startTestBattle = async function() {
+            log('⚔️ === STARTING TEST BATTLE ===', 'success');
+            
+            // Mock battle prep
+            mockGameLogic.equipWeapon('Short Sword');
+            window.battleManager.setStance('balanced');
+            
+            try {
+                // Start battle - but skip the actual prep UI
+                await window.battleManager.startBattle('Slime Beast');
+                
+                // Immediately trigger battle ready
+                setTimeout(() => {
+                    window.battleManager.battlePrepManager.finishPreparation();
+                }, 500);
+                
+            } catch (error) {
+                log('❌ ERROR: ' + error.message, 'error');
+                console.error(error);
+            }
+        };
+        
+        window.clearLog = function() {
+            document.getElementById('testLog').innerHTML = '';
+            log('🗑️ Log cleared', 'info');
+        };
+        
+        window.checkBattleState = function() {
+            updateStateDisplay();
+            log('📊 Battle state checked - see display above', 'info');
+        };
+        
+        // Store original console.log before we override it
+        const originalLog = console.log;
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('testLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            // Use original log to avoid recursion
+            originalLog(message);
+        }
+        
+        function updateStateDisplay() {
+            const bm = window.battleManager;
+            document.getElementById('battleState').textContent = bm.battleState || 'NOT_STARTED';
+            document.getElementById('currentActor').textContent = bm.currentActor || 'None';
+            document.getElementById('declaredAction').textContent = bm.declaredAction ? 
+                JSON.stringify(bm.declaredAction) : 'None';
+            document.getElementById('respondingAction').textContent = bm.respondingAction ? 
+                JSON.stringify(bm.respondingAction) : 'None';
+        }
+        
+        // Intercept console.log for our logging - but only for battle system logs
+        console.log = function(...args) {
+            // Call original first
+            originalLog.apply(console, args);
+            
+            // Only intercept specific messages to avoid recursion
+            if (args[0] && typeof args[0] === 'string') {
+                if (args[0].includes('===') || args[0].startsWith('SCENARIO:') || 
+                    args[0].startsWith('Player') || args[0].startsWith('Monster') ||
+                    args[0].startsWith('Turn') || args[0].startsWith('Current')) {
+                    // Don't call log() here to avoid recursion - just add to display
+                    const logDiv = document.getElementById('testLog');
+                    const entry = document.createElement('div');
+                    entry.className = 'log-entry ' + (args[0].includes('===') ? 'success' : 'info');
+                    entry.textContent = new Date().toLocaleTimeString() + ' - ' + args.join(' ');
+                    logDiv.appendChild(entry);
+                    logDiv.scrollTop = logDiv.scrollHeight;
+                }
+            }
+        };
+        
+        log('Test page loaded. Click "Start Test Battle" to begin.', 'success');
+    </script>
+</body>
+</html>

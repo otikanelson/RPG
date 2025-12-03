@@ -17,7 +17,7 @@ export const DIALOGUES = {
         sequence: "Sequence 1: The Shattered Bazaar",
         characters: ["V'ial Imdall", "Player"],
         texts: [
-            {content: "I am V'ial Imdall, I am the mage assigned to keep the peace of this realm...... And as you can see what a poor job i have done, which is why i need to get back to my business."},
+            {content: "I am [[ V'ial Imdall ]], I am the mage assigned to keep the peace of this realm...... And as you can see, A very poor job i have done, which is why i need to get back to my business."},
             {content: "You look around for a moment and see yourself among burnt buildings and ash everywhere, you look forward again with the intent to ask Imdall a question",
                 choices: [
                     { text: "Where am I?", nextDialogue: "avatarDefined" },
@@ -74,18 +74,45 @@ export const DIALOGUES = {
         location: "Dark Alley",
         sequence: "Sequence 1: The Shattered Bazaar",
         characters: [ "ShadowBeast", "Player"],
+        monster: ["Shadow Beast"],
         texts: [
             {content: "You start to walk toward the alley way...."},
             {content: "A loud shriek interrupts the sound of your footstep"},
             {content: "A creature emerges from the shadows, its eyes gleaming with malice"},
             {content: "It's a beast of some kind, What exactly were you thinking?? It was obvious that wasn't a safe choice and you seem to have no weapons...."},
             {content: "The Shadow Beast lunges forward, leaving you with precious little time to react!"},
-            {content: "wait,...maybe you do. You feel a knife in one of the pouches on you belt"},
-            {content: "You bring it out as quickly as you can, Its rusty, but it'll have to do",
+            {content: "You check yourself for any thing that could help",
                 choices: [
                     { text: "Fight", action: "fight"}
                 ]}]
     },  
+
+    Victory: {
+        name: "Victory",
+        sequence: "Sequence 1: The Shattered Bazaar",
+        location: "Dark Alley",
+        texts: [
+            {content: "You've defeated the monster!",
+                choices: [
+                    { text: "Continue", nextDialogue: "ShadowBeastDefeated" }
+                ]}
+        ]
+    },
+
+    ShadowBeastDefeated: {
+        name: "ShadowBeastDefeated",
+        sequence: "Sequence 1: The Shattered Bazaar",
+        location: "Dark Alley",
+        characters: ["Player"],
+        texts: [
+            {content: "The shadow beast dissolves into wisps of darkness, its malevolent presence finally vanquished."},
+            {content: "As the last remnants fade away, you notice the alley seems brighter somehow, as if a weight has been lifted."},
+            {content: "You catch your breath and check your surroundings. The path ahead is clear now.",
+                choices: [
+                    { text: "Continue exploring", nextDialogue: "BazaarExploration" }
+                ]}
+        ]
+    },
       
     Dehydration: {
         name: "Dehydration",
@@ -193,7 +220,7 @@ export const DIALOGUES = {
         characters: ["Merchant Ragnor", "Player"],
         texts: [
             {content: "The merchant reaches beneath his counter"},
-            {content: "\"For 30 gold, I can offer you something else. Better than that rusty knife you're carrying.\"", trigger: "displayWeapons"},
+            {content: "\"For 30 gold, I can offer you something Better than that rusty knife you're carrying.\"", trigger: "displayWeapons"},
             {content: "\"What say you, traveler? Care to upgrade your arsenal?\"",
                 choices: [
                     { text: "Buy weapon", nextDialogue: "WeaponPurchase"},
@@ -351,6 +378,7 @@ export const DIALOGUES = {
         sequence: "Sequence 1: The Shattered Bazaar",
         location: "Shard Chamber",
         characters: ["Shard Warden", "Player"],
+        monster: ["Shard Warden"],
         texts: [
             {content: "The Shard Warden towers before you, its ancient armor pulsing with magical energy"},
             {content: "[[INTRUDER... THE SHARD MUST BE PROTECTED...]]"},
@@ -381,7 +409,7 @@ export const DIALOGUES = {
             texts: [
                 {content: "You have been defeated... Game Over",
                     choices: [
-                        { text: "Try Again", nextDialogue: 'StartGame' }
+                        { text: "Try Again", nextDialogue: 'Intro' }
                     ]}
             ]
         },   

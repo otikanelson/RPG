@@ -12,7 +12,7 @@ class CharacterManager {
         // Location Data
         this.locations = {
             "Town Square": {
-                image: "Assets/locations/townsquare.webp",
+                image: "Assets/townsquare.webp",
                 description: "Once a bustling center of commerce, now a haunting reminder of what was lost. Crumbling buildings and ash-covered streets tell tales of recent devastation.",
                 soundtrack: "Assets/audio/townsquare-ambient.mp3",
                 ambientSounds: ["crowd_murmur", "distant_bells"]
@@ -42,13 +42,13 @@ class CharacterManager {
                 ambientSounds: ["crystal_hum", "energy_crackle"]
             },
             "Bazaar Streets": {
-                image: "Assets/locations/bazaarstreets.webp",
+                image: "Assets/BazaarStreets.webp",
                 description: "Once-bustling market streets now eerily empty. Abandoned stalls and scattered wares tell of a hasty evacuation.",
                 soundtrack: "Assets/audio/bazaar-ambient.mp3",
                 ambientSounds: ["wind_through_stalls", "distant_voices"]
             },
             "Journey": {
-                image: "Assets/locations/journey.webp",
+                image: "Assets/BazaarStreets.webp",
                 description: "The winding paths between destinations, each step bringing new dangers and discoveries.",
                 soundtrack: "Assets/audio/journey-theme.mp3",
                 ambientSounds: ["footsteps", "wilderness_ambient"]
