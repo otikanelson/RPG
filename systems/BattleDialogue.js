@@ -2,15 +2,18 @@
 // This file loads and manages monster-specific dialogue from individual data files
 
 import { SHADOW_BEAST_DATA } from '../data/shadowBeast.js';
+import { SLIME_BEAST_DATA } from '../data/slimeBeast.js';
+import { SHARD_WARDEN_DATA } from '../data/shardWarden.js';
 
 // Central registry of all available monsters
 // Add new monsters here as they are created
 const MONSTER_DATA_REGISTRY = {
     'shadowbeast': SHADOW_BEAST_DATA,
     'shadow beast': SHADOW_BEAST_DATA, // Allow for both formats
-    // Add more monsters as needed:
-    // 'slime': SLIME_DATA,
-    // 'warden': WARDEN_DATA,
+    'slimebeast': SLIME_BEAST_DATA,
+    'slime beast': SLIME_BEAST_DATA,
+    'shardwarden': SHARD_WARDEN_DATA,
+    'shard warden': SHARD_WARDEN_DATA,
 };
 
 /**
@@ -258,7 +261,11 @@ export function getVictoryDialogue(monsterId) {
 // This allows old code to still work while we transition
 export const MONSTER_DIALOGUES = {
     get shadowbeast() { return SHADOW_BEAST_DATA; },
-    get 'shadow beast'() { return SHADOW_BEAST_DATA; }
+    get 'shadow beast'() { return SHADOW_BEAST_DATA; },
+    get slimebeast() { return SLIME_BEAST_DATA; },
+    get 'slime beast'() { return SLIME_BEAST_DATA; },
+    get shardwarden() { return SHARD_WARDEN_DATA; },
+    get 'shard warden'() { return SHARD_WARDEN_DATA; }
 };
 
 // Export all helper functions

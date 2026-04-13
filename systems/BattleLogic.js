@@ -146,6 +146,97 @@ class BattleManager {
     }
 
     /**
+     * Validate state transitions to prevent invalid battle states
+     * @param {string} fromState - Current state
+     * @param {string} toState - Target state
+     * @returns {boolean} - True if transition is valid
+     */
+    isValidStateTransition(fromState, toState) {
+        const validTransitions = {
+            [BATTLE_STATE.NOT_STARTED]: [BATTLE_STATE.PREPARATION],
+            [BATTLE_STATE.PREPARATION]: [BATTLE_STATE.FIRST_TURN, BATTLE_STATE.NOT_STARTED],
+            [BATTLE_STATE.FIRST_TURN]: [BATTLE_STATE.ACTOR_PHASE, BATTLE_STATE.DEFEAT, BATTLE_STATE.VICTORY],
+            [BATTLE_STATE.ACTOR_PHASE]: [BATTLE_STATE.RESPONDER_PHASE, BATTLE_STATE.DEFEAT, BATTLE_STATE.VICTORY],
+            [BATTLE_STATE.RESPONDER_PHASE]: [BATTLE_STATE.RESOLUTION, BATTLE_STATE.DEFEAT, BATTLE_STATE.VICTORY],
+            [BATTLE_STATE.RESOLUTION]: [BATTLE_STATE.ACTOR_PHASE, BATTLE_STATE.DEFEAT, BATTLE_STATE.VICTORY],
+            [BATTLE_STATE.VICTORY]: [BATTLE_STATE.NOT_STARTED],
+            [BATTLE_STATE.DEFEAT]: [BATTLE_STATE.NOT_STARTED]
+        };
+
+        return validTransitions[fromState]?.includes(toState) || false;
+    }
+
+    /**
+     * Safely transition to a new battle state with validation
+     * @param {string} newState - The state to transition to
+     * @returns {boolean} - True if transition was successful
+     */
+    transitionToState(newState) {
+        if (!this.isValidStateTransition(this.battleState, newState)) {
+            console.error(`Invalid state transition from ${this.battleState} to ${newState}`);
+            return false;
+        }
+
+        console.log(`Battle state: ${this.battleState} -> ${newState}`);
+        this.battleState = newState;
+        return true;
+    }
+
+    /**
+     * Validate that required data exists for current battle state
+     * @returns {boolean} - True if state is valid
+     */
+    validateCurrentState() {
+        switch (this.battleState) {
+            case BATTLE_STATE.NOT_STARTED:
+                return true;
+                
+            case BATTLE_STATE.PREPARATION:
+                return this.currentMonster !== null;
+                
+            case BATTLE_STATE.FIRST_TURN:
+            case BATTLE_STATE.ACTOR_PHASE:
+            case BATTLE_STATE.RESPONDER_PHASE:
+            case BATTLE_STATE.RESOLUTION:
+                return this.currentMonster !== null && 
+                       this.currentActor !== null &&
+                       this.selectedStance !== null;
+                       
+            case BATTLE_STATE.VICTORY:
+            case BATTLE_STATE.DEFEAT:
+                return this.currentMonster !== null;
+                
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Reset battle state and clear all battle data
+     */
+    resetBattleState() {
+        this.battleState = BATTLE_STATE.NOT_STARTED;
+        this.currentActor = null;
+        this.currentMonster = null;
+        this.selectedStance = null;
+        this.declaredAction = null;
+        this.respondingAction = null;
+        this.inBattle = false;
+        
+        // Stop any playing music
+        if (this.currentBattleMusic) {
+            this.currentBattleMusic.pause();
+            this.currentBattleMusic.currentTime = 0;
+            this.currentBattleMusic = null;
+        }
+        
+        // Hide monster stats UI
+        if (this.monsterStats) {
+            this.monsterStats.style.display = 'none';
+        }
+    }
+
+    /**
      * Start the battle sequence
      * @param {string} monsterName - The name of the monster to battle
      * @returns {Promise} - Resolves when battle prep is complete
@@ -153,13 +244,14 @@ class BattleManager {
     async startBattle(monsterName) {
         console.log(`BattleManager.startBattle called with monster: ${monsterName}`);
         
-        if (this.battleState !== BATTLE_STATE.NOT_STARTED) {
-            console.warn("Battle already in progress");
+        if (!this.transitionToState(BATTLE_STATE.PREPARATION)) {
+            console.warn("Cannot start battle - invalid state transition");
             return;
         }
         
         if (!this.monsters[monsterName]) {
             console.error(`Monster "${monsterName}" not found!`);
+            this.resetBattleState();
             return;
         }
         

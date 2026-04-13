@@ -53,8 +53,28 @@ class GameLogic {
             equippedPotion: null  // Added here instead of trying to set it separately
         };
 
+        // Initialize GameStorage for save/load functionality
+        this.initializeGameStorage();
+
         // Initial UI update
         this.updateUI();
+    }
+
+    /**
+     * Initialize GameStorage system
+     */
+    async initializeGameStorage() {
+        try {
+            const GameStorage = await import('./GameStorage.js');
+            this.gameStorage = new GameStorage.default();
+            
+            // Make gameLogic globally accessible for GameStorage
+            window.gameLogic = this;
+            
+            console.log('GameStorage initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize GameStorage:', error);
+        }
     }
 
 

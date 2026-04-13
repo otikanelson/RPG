@@ -1,195 +1,231 @@
-// class GameStorage {
-//     constructor() {
-//         this.saveButton = document.querySelector('.savebtn');
-//         this.achievements = this.loadAchievements();
-//         this.choiceSequences = [];
-//         this.visitedLocations = new Set();
-//         this.unlockedCharacters = new Map();
+class GameStorage {
+    constructor() {
+        this.saveButton = document.querySelector('.savebtn');
+        this.loadButton = document.querySelector('.load');
+        this.achievements = this.loadAchievements();
+        this.choiceSequences = [];
+        this.visitedLocations = new Set();
+        this.unlockedCharacters = new Map();
         
-//         this.bindEvents();
+        this.bindEvents();
+    }
 
-//         this.choiceSequences = [];
-//         this.visitedLocations = new Set();
-//         // ... existing constructor code ...
+    bindEvents() {
+        this.saveButton?.addEventListener('click', () => this.saveGame());
+        this.loadButton?.addEventListener('click', () => this.loadGame());
+    }
 
-//     }
-//     addChoiceSequence(choiceData) {
-//         this.choiceSequences.push({
-//             ...choiceData,
-//             timestamp: Date.now()
-//         });
-//     }
+    saveGame() {
+        // Get current game state from GameLogic
+        const gameLogic = window.gameLogic || this.getGameLogicInstance();
+        if (!gameLogic) {
+            this.showNotification('Game logic not available', true);
+            return;
+        }
 
-//     addLocation(location) {
-//         this.visitedLocations.add(location);
-//     }
+        const gameState = {
+            player: {
+                health: gameLogic.stats.health,
+                maxHealth: gameLogic.stats.maxHealth,
+                gold: gameLogic.stats.gold,
+                xp: gameLogic.stats.xp,
+                level: gameLogic.stats.level,
+                inventory: gameLogic.inventory,
+                weapons: gameLogic.weapons
+            },
+            progress: {
+                choiceSequences: this.choiceSequences,
+                visitedLocations: Array.from(this.visitedLocations),
+                achievements: this.achievements,
+                characters: Array.from(this.unlockedCharacters)
+            },
+            timestamp: Date.now(),
+            version: '1.0.0'
+        };
 
-//     getChoiceSequences() {
-//         return this.choiceSequences;
-//     }
+        try {
+            localStorage.setItem('rpgGameState', JSON.stringify(gameState));
+            this.showNotification('Game saved successfully!');
+        } catch (error) {
+            console.error('Save failed:', error);
+            this.showNotification('Failed to save game', true);
+        }
+    }
 
-//     getVisitedLocations() {
-//         return Array.from(this.visitedLocations);
-//     }
+    loadGame() {
+        try {
+            const savedState = localStorage.getItem('rpgGameState');
+            if (!savedState) {
+                this.showNotification('No saved game found', true);
+                return;
+            }
 
-
-//     bindEvents() {
-//         this.saveButton?.addEventListener('click', () => this.saveGame());
-//         document.querySelector('.load')?.addEventListener('click', () => this.loadGame());
-//     }
-
-//     saveGame() {
-//         const gameState = {
-//             player: {
-//                 health: health,
-//                 gold: gold,
-//                 xp: xp,
-//                 inventory: inventory,
-//                 currentWeapon: currentWeapon
-//             },
-//             progress: {
-//                 choiceSequences: this.choiceSequences,
-//                 visitedLocations: Array.from(this.visitedLocations),
-//                 achievements: this.achievements,
-//                 characters: Array.from(this.unlockedCharacters)
-//             },
-//             timestamp: Date.now()
-//         };
-
-//         try {
-//             localStorage.setItem('gameState', JSON.stringify(gameState));
-//             this.showNotification('Game saved successfully!');
-//         } catch (error) {
-//             console.error('Save failed:', error);
-//             this.showNotification('Failed to save game', true);
-//         }
-//     }
-
-//     loadGame() {
-//         try {
-//             const savedState = localStorage.getItem('gameState');
-//             if (!savedState) {
-//                 this.showNotification('No saved game found', true);
-//                 return;
-//             }
-
-//             const gameState = JSON.parse(savedState);
+            const gameState = JSON.parse(savedState);
+            const gameLogic = window.gameLogic || this.getGameLogicInstance();
             
-//             // Restore player state
-//             health = gameState.player.health;
-//             gold = gameState.player.gold;
-//             xp = gameState.player.xp;
-//             inventory = gameState.player.inventory;
-//             currentWeapon = gameState.player.currentWeapon;
+            if (!gameLogic) {
+                this.showNotification('Game logic not available', true);
+                return;
+            }
+            
+            // Restore player state
+            gameLogic.stats.health = gameState.player.health;
+            gameLogic.stats.maxHealth = gameState.player.maxHealth;
+            gameLogic.stats.gold = gameState.player.gold;
+            gameLogic.stats.xp = gameState.player.xp;
+            gameLogic.stats.level = gameState.player.level;
+            gameLogic.inventory = gameState.player.inventory;
+            gameLogic.weapons = gameState.player.weapons;
 
-//             // Restore progress
-//             this.choiceSequences = gameState.progress.choiceSequences;
-//             this.visitedLocations = new Set(gameState.progress.visitedLocations);
-//             this.achievements = gameState.progress.achievements;
-//             this.unlockedCharacters = new Map(gameState.progress.characters);
+            // Restore progress
+            this.choiceSequences = gameState.progress.choiceSequences || [];
+            this.visitedLocations = new Set(gameState.progress.visitedLocations || []);
+            this.achievements = gameState.progress.achievements || [];
+            this.unlockedCharacters = new Map(gameState.progress.characters || []);
 
-//             // Update UI
-//             this.updateUI();
-//             this.showNotification('Game loaded successfully!');
-//         } catch (error) {
-//             console.error('Load failed:', error);
-//             this.showNotification('Failed to load game', true);
-//         }
-//     }
+            // Update UI
+            gameLogic.updateUI();
+            this.showNotification('Game loaded successfully!');
+        } catch (error) {
+            console.error('Load failed:', error);
+            this.showNotification('Failed to load game', true);
+        }
+    }
 
-//     updateUI() {
-//         // Update player stats
-//         document.getElementById('healthText').textContent = health;
-//         document.getElementById('goldText').textContent = gold;
-//         document.getElementById('xpText').textContent = xp;
-//         document.getElementById('weaponsText').textContent = inventory.join(', ');
+    getGameLogicInstance() {
+        // Try to find gameLogic instance
+        if (typeof gameLogic !== 'undefined') {
+            return gameLogic;
+        }
+        
+        // Try to import it
+        try {
+            return import('../core/GameLogic.js').then(module => module.default);
+        } catch (error) {
+            console.error('Could not find GameLogic instance:', error);
+            return null;
+        }
+    }
 
-//         // Update achievements popup
-//         const achievementsPopup = document.getElementById('popup4');
-//         if (achievementsPopup) {
-//             achievementsPopup.innerHTML = this.achievements.length ? 
-//                 this.achievements.map(a => `<p>${a.name}: ${a.description}</p>`).join('') :
-//                 '<p>No achievements yet</p>';
-//         }
-//     }
+    showNotification(message, isError = false) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${isError ? 'error' : 'success'}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+            background-color: ${isError ? '#f44336' : '#4CAF50'};
+        `;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
 
-//     showNotification(message, isError = false) {
-//         const notification = document.createElement('div');
-//         notification.className = `notification ${isError ? 'error' : 'success'}`;
-//         notification.textContent = message;
-//         document.body.appendChild(notification);
+    // Achievement management
+    loadAchievements() {
+        try {
+            return JSON.parse(localStorage.getItem('rpgAchievements') || '[]');
+        } catch (error) {
+            console.error('Failed to load achievements:', error);
+            return [];
+        }
+    }
 
-//         setTimeout(() => notification.remove(), 3000);
-//     }
+    unlockAchievement(achievement) {
+        if (!this.achievements.some(a => a.id === achievement.id)) {
+            this.achievements.push({
+                ...achievement,
+                unlockedAt: Date.now()
+            });
+            localStorage.setItem('rpgAchievements', JSON.stringify(this.achievements));
+            this.showNotification(`Achievement Unlocked: ${achievement.name}!`);
+        }
+    }
 
-//     // Achievement management
-//     loadAchievements() {
-//         return JSON.parse(localStorage.getItem('achievements') || '[]');
-//     }
+    // Choice tracking for story branching
+    addChoice(choice, context = {}) {
+        this.choiceSequences.push({
+            choice,
+            context,
+            timestamp: Date.now()
+        });
+    }
 
-//     unlockAchievement(achievement) {
-//         if (!this.achievements.some(a => a.id === achievement.id)) {
-//             this.achievements.push(achievement);
-//             localStorage.setItem('achievements', JSON.stringify(this.achievements));
-//             this.showNotification(`Achievement Unlocked: ${achievement.name}!`);
-//         }
-//     }
+    getChoiceHistory() {
+        return this.choiceSequences;
+    }
 
-//     // Choice tracking
-//     addChoice(choice) {
-//         this.choiceSequences.push({
-//             choice,
-//             timestamp: Date.now()
-//         });
-//     }
+    // Location tracking
+    addLocation(location) {
+        this.visitedLocations.add(location);
+    }
 
-//     // Location tracking
-//     addLocation(location) {
-//         this.visitedLocations.add(location);
-//     }
+    hasVisitedLocation(location) {
+        return this.visitedLocations.has(location);
+    }
 
-//     // Character management
-//     unlockCharacter(character) {
-//         this.unlockedCharacters.set(character.id, character);
-//     }
-// }
+    getVisitedLocations() {
+        return Array.from(this.visitedLocations);
+    }
 
-// // Add styles
-// const style = document.createElement('style');
-// style.textContent = `
-//     .notification {
-//         position: fixed;
-//         top: 20px;
-//         right: 20px;
-//         padding: 15px;
-//         border-radius: 5px;
-//         color: white;
-//         z-index: 1000;
-//         animation: slideIn 0.3s ease-out;
-//     }
+    // Character management
+    unlockCharacter(character) {
+        this.unlockedCharacters.set(character.id, {
+            ...character,
+            unlockedAt: Date.now()
+        });
+    }
 
-//     .success {
-//         background-color: #4CAF50;
-//     }
+    isCharacterUnlocked(characterId) {
+        return this.unlockedCharacters.has(characterId);
+    }
 
-//     .error {
-//         background-color: #f44336;
-//     }
+    getUnlockedCharacters() {
+        return Array.from(this.unlockedCharacters.values());
+    }
 
-//     @keyframes slideIn {
-//         from { transform: translateX(100%); }
-//         to { transform: translateX(0); }
-//     }
-// `;
-// document.head.appendChild(style);
+    // Clear all save data (for testing or reset)
+    clearSaveData() {
+        localStorage.removeItem('rpgGameState');
+        localStorage.removeItem('rpgAchievements');
+        this.achievements = [];
+        this.choiceSequences = [];
+        this.visitedLocations.clear();
+        this.unlockedCharacters.clear();
+        this.showNotification('Save data cleared');
+    }
 
+    // Check if save data exists
+    hasSaveData() {
+        return localStorage.getItem('rpgGameState') !== null;
+    }
+}
 
-// // Usage example:
-// const gameStorage = new GameStorage();
-// const textManager = new TextManager();
-// const dialogueManager = new DialogueManager(textManager, gameStorage);
+// Add CSS for notifications
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .notification {
+        font-family: 'Arial', sans-serif;
+        font-size: 14px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .notification:hover {
+        transform: translateX(-5px);
+    }
+`;
+document.head.appendChild(style);
 
-// // Start the initial dialogue
-// dialogueManager.startDialogue('intro');
-
-// export default GameStorage;
+export default GameStorage;

@@ -4,6 +4,7 @@
  */
 
 import { BATTLE_STATE, TURN_ACTOR } from './BattleLogic.js';
+import { getPlayerDefendDialogue, getPlayerAttackDialogue, getDefendDialogue, getAttackDialogue } from './BattleDialogue.js';
 
 class BattleActions {
     constructor(battleManager) {
@@ -230,16 +231,11 @@ class BattleActions {
     getPlayerDefendDialogue(weaponType, defenseAction, attackType) {
         const bm = this.battleManager;
         const monsterKey = bm.currentMonster.name.replace(/\s+/g, '').toLowerCase();
-        const dialogues = bm.monsterDialogues[monsterKey];
         
-        if (!dialogues || !dialogues.playerDefends) {
-            return null;
-        }
+        // Use the new dialogue system
+        const dialogue = getPlayerDefendDialogue(monsterKey, weaponType, attackType);
         
-        // Convert defense action to dialogue key (e.g., "Block" -> "vsSlam")
-        const dialogueKey = `vs${bm.capitalizeFirstLetter(attackType)}`;
-        
-        return dialogues.playerDefends?.[weaponType]?.[dialogueKey] || null;
+        return dialogue || null;
     }
     
     /**
@@ -252,16 +248,11 @@ class BattleActions {
     getPlayerAttackDialogue(weaponType, attackAction, defendType) {
         const bm = this.battleManager;
         const monsterKey = bm.currentMonster.name.replace(/\s+/g, '').toLowerCase();
-        const dialogues = bm.monsterDialogues[monsterKey];
         
-        if (!dialogues || !dialogues.playerAttacks) {
-            return null;
-        }
+        // Use the new dialogue system
+        const dialogue = getPlayerAttackDialogue(monsterKey, weaponType, defendType);
         
-        // Convert defense type to dialogue key (e.g., "split" -> "vsSplit")
-        const dialogueKey = `vs${bm.capitalizeFirstLetter(defendType)}`;
-        
-        return dialogues.playerAttacks?.[weaponType]?.[dialogueKey] || null;
+        return dialogue || null;
     }
     
     /**
@@ -565,13 +556,9 @@ class BattleActions {
         } else if (monsterResponse.type === 'defend') {
             // Monster defends against player attack - use monster defense dialogue
             const monsterKey = bm.currentMonster.name.replace(/\s+/g, '').toLowerCase();
-            const dialogues = bm.monsterDialogues[monsterKey];
             
-            // Get monster defense dialogue
-            let defenseDialogue = null;
-            if (dialogues && dialogues.defends) {
-                defenseDialogue = dialogues.defends?.[weaponType]?.[monsterResponse.defendType];
-            }
+            // Get monster defense dialogue using new system
+            const defenseDialogue = getDefendDialogue(monsterKey, weaponType, monsterResponse.defendType);
             
             // Show defense dialogue if available
             if (defenseDialogue) {
@@ -642,13 +629,9 @@ class BattleActions {
         if (monsterResponse.type === 'attack') {
             // Monster attacks the defending player - use monster attack dialogue
             const monsterKey = bm.currentMonster.name.replace(/\s+/g, '').toLowerCase();
-            const dialogues = bm.monsterDialogues[monsterKey];
             
-            // Get monster attack dialogue
-            let attackDialogue = null;
-            if (dialogues && dialogues.attacks) {
-                attackDialogue = dialogues.attacks?.[weaponType]?.[monsterResponse.attackType];
-            }
+            // Get monster attack dialogue using new system
+            const attackDialogue = getAttackDialogue(monsterKey, weaponType, monsterResponse.attackType);
             
             // Show attack dialogue if available
             if (attackDialogue) {

@@ -14,6 +14,10 @@ class TextManager {
             button3: document.getElementById('button3')
         };
         
+        // Add equipped box reference for visibility control
+        this.equippedBox = document.querySelector('.equipped');
+        console.log('TextManager initialized, equipped box found:', !!this.equippedBox);
+        
         // Check if text element exists
         if (!this.textElement) {
             console.error("Text element not found! Make sure there's an element with id 'text' in your HTML.");
@@ -69,12 +73,19 @@ class TextManager {
      * Hide all buttons
      */
     hideAllButtons() {
+        console.log('hideAllButtons called');
         Object.values(this.buttons).forEach(button => {
             if (button) {
                 button.style.display = 'none';
                 button.textContent = ''; // Clear button text
             }
         });
+        
+        // Hide equipped box when all buttons are hidden
+        if (this.equippedBox) {
+            console.log('Hiding equipped box');
+            this.equippedBox.style.display = 'none';
+        }
     }
 
     /**
@@ -82,6 +93,7 @@ class TextManager {
      * @param {Array} choices - Choice objects to display as buttons
      */
     showButtons(choices) {
+        console.log('showButtons called with:', choices);
         if (!choices) return;
         
         choices.forEach((choice, index) => {
@@ -91,6 +103,12 @@ class TextManager {
                 button.style.display = 'block';
             }
         });
+        
+        // Show equipped box when buttons are shown
+        if (this.equippedBox && choices && choices.length > 0) {
+            console.log('Showing equipped box');
+            this.equippedBox.style.display = 'flex';
+        }
     }
     
     /**
@@ -202,7 +220,7 @@ class TextManager {
      */
     finishTyping(resolve) {
         this.isTyping = false;
-        this.showButtons();
+        // Note: showButtons() should be called separately with choices when needed
         if (this.hasNextText) {
             this.showSkipInstruction('Press SPACE for next');
         } else {

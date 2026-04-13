@@ -844,11 +844,10 @@ ul li:hover ul.dropdown {
 }
 
 /* Dice Animation */
-
-
-
-
-
+@keyframes diceRoll {
+    0%, 100% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
     25% {
         transform: translate(-50%, -50%) rotate(90deg) scale(1.2);
     }
@@ -873,20 +872,6 @@ ul li:hover ul.dropdown {
     padding: var(--spacing-md);
     gap: var(--spacing-md);
     box-shadow: var(--shadow-lg);
-}
-
-/* Equipped Items */
-.equipped {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-}
-
-#equippedText {
-    font-size: 18px;
-    color: var(--primary-blue-light);
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -996,63 +981,8 @@ ul li:hover ul.dropdown {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-/* Dialogue Buttons */
-.dialogueBtns {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.dialogueBtns button {
-    width: 80%;
-    min-height: 45px;
-    font-size: 17px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid rgba(0, 0, 0, 0.8);
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgb(4, 12, 58) 0%, rgb(2, 6, 29) 100%);
-    color: white;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    position: relative;
-    overflow: hidden;
-}
-
-.dialogueBtns button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.5s ease, height 0.5s ease;
-}
-
-.dialogueBtns button:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(135deg, rgb(6, 18, 87) 0%, rgb(3, 9, 43) 100%);
-    box-shadow: 0 6px 15px rgba(74, 144, 226, 0.5);
-}
-
-.dialogueBtns button:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.dialogueBtns button:active {
-    transform: translateY(0) scale(0.98);
-}
+/* ========== DIALOGUE BUTTONS - REMOVED DUPLICATE ========== */
+/* Dialogue buttons CSS is now defined in the main dialogue section above */
 
 /* Player Info Panel */
 .playerInfo {
@@ -1281,8 +1211,7 @@ ul li:hover ul.dropdown {
         min-height: auto;
     }
     
-    .equipped, 
-    
+    .equipped,
     .dialogue {
         width: 100%;
     }
@@ -1464,29 +1393,47 @@ button:disabled {
     z-index: 1;
 }
 
-/* ========== EQUIPPED BOX FIX ========== */
-/* Smaller default size, expands on click */
-.equipped {
+/* ========== DIALOGUE SECTION - HORIZONTAL LAYOUT ========== */
+.dialogue {
+    flex: 1;
     display: flex;
+    flex-direction: row; /* Horizontal: equipped left, buttons right */
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+}
+
+/* ========== EQUIPPED BOX - LEFT OF DIALOGUE BUTTONS ========== */
+.equipped {
+    display: flex !important; /* Force show for debugging */
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
+    align-items: center;
+    min-width: 120px;
+    max-width: 140px;
+    order: -1; /* Ensure it appears first (left side) */
+    background: rgba(255, 0, 0, 0.2); /* Temporary red background for debugging */
+    border: 2px solid red; /* Temporary red border for debugging */
+    padding: 10px;
 }
 
 #equippedText {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--primary-blue-light);
     font-weight: bold;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
 }
 
 .equippedBox {
-    width: 150px;
+    width: 100px;
     height: 80px;
     border-radius: var(--radius-md);
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs);
     background: linear-gradient(135deg, #c7a575 0%, #8b7355 100%);
-    border: 3px solid rgba(0, 0, 0, 0.8);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), var(--shadow-md);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), var(--shadow-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1502,96 +1449,70 @@ button:disabled {
 }
 
 .equipped-placeholder {
-    color: rgba(0, 0, 0, 0.5);
-    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 11px;
     font-style: italic;
     text-align: center;
     pointer-events: none;
 }
 
-/* Expanded state */
-.equippedBox.expanded {
-    width: 400px;
-    height: 300px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2000;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-    animation: expandBox 0.3s ease;
+/* Dialogue buttons - Right side of dialogue area */
+.dialogueBtns {
+    flex: 1;
+    max-width: 400px;
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    overflow-y: auto;
-    padding: var(--spacing-md);
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
-@keyframes expandBox {
-    from {
-        width: 150px;
-        height: 80px;
-        transform: translate(-50%, -50%) scale(0.5);
-        opacity: 0;
-    }
-    to {
-        width: 400px;
-        height: 300px;
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-}
-
-.equippedBox.expanded .equipped-placeholder {
-    display: none;
-}
-
-/* Backdrop for expanded equipped box */
-.equippedBox.expanded::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    z-index: -1;
-}
-
-/* Close button for expanded box */
-.equippedBox.expanded::after {
-    content: '✕';
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    border-radius: 50%;
+.dialogueBtns button {
+    width: 90%;
+    min-height: 50px;
+    font-size: 18px;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgb(4, 12, 58) 0%, rgb(2, 6, 29) 100%);
+    color: white;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    position: relative;
+    overflow: hidden;
 }
 
-.equippedBox.expanded::after:hover {
-    background: var(--danger-red);
-    transform: rotate(90deg);
+.dialogueBtns button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
 }
 
-/* ========== MONSTER STATS FIX ========== */
-/* Monster stats now properly positioned in dialogue area */
-.dialogue {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-sm);
+.dialogueBtns button:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, rgb(6, 18, 87) 0%, rgb(3, 9, 43) 100%);
+    box-shadow: 0 6px 15px rgba(74, 144, 226, 0.5);
+}
+
+.dialogueBtns button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.dialogueBtns button:active {
+    transform: translateY(0) scale(0.98);
 }
 
 
@@ -1653,75 +1574,24 @@ button:disabled {
     border-radius: 8px 8px 0 0;
 }
 
-/* Dialogue buttons stay below monster stats */
-.dialogueBtns {
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.dialogueBtns button {
-    width: 90%;
-    min-height: 50px;
-    font-size: 18px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid rgba(0, 0, 0, 0.8);
-    border-radius: var(--radius-md);
-    background: linear-gradient(135deg, rgb(4, 12, 58) 0%, rgb(2, 6, 29) 100%);
-    color: white;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    position: relative;
-    overflow: hidden;
-}
-
-.dialogueBtns button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.5s ease, height 0.5s ease;
-}
-
-.dialogueBtns button:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(135deg, rgb(6, 18, 87) 0%, rgb(3, 9, 43) 100%);
-    box-shadow: 0 6px 15px rgba(74, 144, 226, 0.5);
-}
-
-.dialogueBtns button:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.dialogueBtns button:active {
-    transform: translateY(0) scale(0.98);
-}
-
 /* ========== RESPONSIVE FIXES ========== */
 @media (max-width: 768px) {
     .equippedBox {
-        width: 120px;
-        height: 70px;
+        width: 80px;
+        height: 60px;
     }
     
     .equippedBox.expanded {
         width: 90vw;
         height: 60vh;
+    }
+    
+    #equippedText {
+        font-size: 12px;
+    }
+    
+    .equipped-placeholder {
+        font-size: 10px;
     }
     
     #dice {
@@ -1734,8 +1604,6 @@ button:disabled {
         right: 5px;
     }
     
-    
-    
     .dialogueBtns button {
         width: 95%;
         min-height: 45px;
@@ -1745,16 +1613,16 @@ button:disabled {
 
 @media (max-width: 480px) {
     .equippedBox {
-        width: 100px;
-        height: 60px;
+        width: 70px;
+        height: 50px;
     }
     
     #equippedText {
-        font-size: 14px;
+        font-size: 11px;
     }
     
     .equipped-placeholder {
-        font-size: 12px;
+        font-size: 9px;
     }
     
     #dice {
@@ -1766,35 +1634,52 @@ button:disabled {
         font-size: 15px;
         min-height: 42px;
     }
+    
+    .storyFunctions {
+        flex-direction: column;
+        min-height: auto;
+        gap: var(--spacing-sm);
+    }
+    
+    .dialogue {
+        flex-direction: column; /* Stack vertically on mobile */
+    }
+    
+    .equipped {
+        order: -1; /* Put equipped box above dialogue buttons on mobile */
+        max-width: 200px;
+    }
 }
 
 
 /* ========== CHARACTER & MONSTER POSITIONING FIX ========== */
-/* ========== GAME LAYOUT FIX ========== */
+/* ========== GAME LAYOUT - FIXED STRUCTURE ========== */
 #Game {
     display: flex;
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 92%;
+    height: calc(100vh - 60px); /* Account for navbar */
     background: linear-gradient(135deg, #025368 0%, #013d4d 100%);
-    flex-direction: row;  /* Left to right: Character | Story */
+    flex-direction: row;
     justify-content: flex-start;
     padding: var(--spacing-sm);
     gap: var(--spacing-sm);
+    overflow: hidden;
 }
 
-/* ========== CHARACTER INFO - LEFT SIDE ========== */
+/* ========== CHARACTER INFO - LEFT SIDEBAR ========== */
 #characterInfo {
-    display: flex;  /* Always visible now */
-    width: 420px;
-    min-width: 420px;
+    display: flex;
+    width: 350px;
+    min-width: 300px;
+    max-width: 400px;
     height: 100%;
     border-radius: var(--radius-lg);
     background: linear-gradient(135deg, rgb(8, 2, 46) 0%, rgb(4, 1, 23) 100%);
     flex-direction: column;
     border: 3px solid rgba(0, 0, 0, 0.8);
     box-shadow: var(--shadow-lg);
-    overflow-y: auto;
+    overflow: hidden; /* Remove scrollbar */
 }
 
 
@@ -1878,54 +1763,85 @@ button:disabled {
     min-width: 0;  /* Allow shrinking */
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE LAYOUT FIXES ========== */
 @media (max-width: 1200px) {
     #characterInfo {
-        width: 350px;
-        min-width: 350px;
+        width: 320px;
+        min-width: 280px;
+        max-width: 350px;
     }
     
     .CharImg {
-        max-width: 330px;
+        max-width: 300px;
+    }
+    
+    .charName {
+        font-size: 28px;
     }
 }
 
 @media (max-width: 968px) {
     #Game {
         flex-direction: column;
+        height: calc(100vh - 60px);
     }
     
     #characterInfo {
         width: 100%;
         min-width: 100%;
-        height: auto;
-        max-height: 40%;
+        max-width: 100%;
+        height: 200px;
+        min-height: 180px;
+        max-height: 250px;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    
+    .char {
+        min-width: 200px;
+    }
+    
+    #Info {
+        min-width: 150px;
+        height: 100%;
     }
     
     .CharImg {
-        max-width: 250px;
+        max-width: 150px;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .storySection {
+        flex: 1;
+        height: calc(100% - 250px);
     }
 }
 
 @media (max-width: 480px) {
     #characterInfo {
-        max-height: 35%;
+        height: 150px;
+        min-height: 130px;
+        max-height: 180px;
     }
     
     .CharImg {
-        max-width: 200px;
+        max-width: 120px;
     }
     
+    .charName {
+        font-size: 20px;
+    }
     
-    
-    .monster-name {
-        font-size: 18px !important;
+    .char {
+        min-width: 150px;
     }
 }
 
 
 /* ========== REDESIGNED CHARACTER & MONSTER SYSTEM ========== */
-/* ========== MONSTER STATS - COMPACT REDESIGN ========== */
+/* ========== MONSTER STATS - IN DIALOGUE AREA ========== */
 #monsterStats {
     display: none;  /* Hidden by default, shown during battle */
     width: 100%;
@@ -1935,7 +1851,8 @@ button:disabled {
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md), inset 0 2px 4px rgba(255, 255, 255, 0.1);
     animation: slideDown 0.3s ease;
-    margin: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    order: -1; /* Show above dialogue buttons */
 }
 
 /* Compact horizontal layout */
@@ -2153,25 +2070,13 @@ button:disabled {
     display: none !important;
 }
 
-/* ========== MONSTER STATS REPLACES CHARACTER INFO ========== */
-/* When monster stats are shown, hide character image and description */
-#characterInfo.battle-mode #Info {
-    display: none !important;
+/* ========== MONSTER STATS VISIBILITY CONTROL ========== */
+/* Monster stats appear in dialogue area during battle */
+.dialogue #monsterStats {
+    display: block;
 }
 
-#characterInfo.battle-mode .CharImg {
-    display: none !important;
-}
-
-#characterInfo.battle-mode .descr {
-    display: none !important;
-}
-
-/* When monster stats shown, expand to fill space */
-#characterInfo.battle-mode #monsterStats {
-    display: block !important;
-    margin-top: var(--spacing-md);
-}
+/* Keep character info always visible - no hiding during battle */
 
 /* ========== RESPONSIVE ADJUSTMENTS ========== */
 @media (max-width: 1200px) {
