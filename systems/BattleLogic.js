@@ -41,20 +41,20 @@ class BattleManager {
         this.monsterHealthBar = document.querySelector('.monsterHealthBar');
         this.diceElement = document.getElementById('dice');
          
-        // Initialize audio elements
+        // Initialize audio elements with error handling
         this.battleSounds = {
-            dice: new Audio('Assets/dice-roll.mp3'),
-            attack: new Audio('Assets/attack-sound.mp3'),
-            defend: new Audio('Assets/defend-sound.mp3'),
-            victory: new Audio('Assets/victory-sound.mp3'),
-            defeat: new Audio('Assets/defeat-sound.mp3')
+            dice: this.createAudioWithFallback('Assets/dice-roll.mp3'),
+            attack: this.createAudioWithFallback('Assets/attack-sound.mp3'),
+            defend: this.createAudioWithFallback('Assets/defend-sound.mp3'),
+            victory: this.createAudioWithFallback('Assets/victory-sound.mp3'),
+            defeat: this.createAudioWithFallback('Assets/defeat-sound.mp3')
         };
         
         this.battleMusic = {
-            slimebeast: new Audio('Assets/slime-battle.mp3'),
-            shardwarden: new Audio('Assets/warden-battle.mp3'),
-            shadowbeast: new Audio('Assets/shadow-battle.mp3'),
-            default: new Audio('Assets/default-battle.mp3')
+            slimebeast: this.createAudioWithFallback('Assets/slime-battle.mp3'),
+            shardwarden: this.createAudioWithFallback('Assets/warden-battle.mp3'),
+            shadowbeast: this.createAudioWithFallback('Assets/shadow-battle.mp3'),
+            default: this.createAudioWithFallback('Assets/default-battle.mp3')
         };
         
         // Monster definitions
@@ -143,6 +143,27 @@ class BattleManager {
         this.calculations = new BattleCalculations(this);
         this.actions = new BattleActions(this);
         this.battlePrepManager = new BattlePreparationManager(gameLogic, this);
+    }
+
+    /**
+     * Create audio element with error handling
+     * @param {string} path - Path to audio file
+     * @returns {Audio} - Audio element or mock object
+     */
+    createAudioWithFallback(path) {
+        const audio = new Audio();
+        audio.src = path;
+        audio.addEventListener('error', () => {
+            console.warn(`Audio file not found: ${path}`);
+        });
+        // Add a mock play method that doesn't throw errors
+        const originalPlay = audio.play.bind(audio);
+        audio.play = () => {
+            return originalPlay().catch(e => {
+                // Silently handle play errors
+            });
+        };
+        return audio;
     }
 
     /**

@@ -49,7 +49,7 @@ class GameLogic {
         this.inventory = {
             healthPotions: 2,
             weapons: ['Rusty Knife', 'Short Sword', 'Steel Axe'],
-            equippedWeapon: '',
+            equippedWeapon: 'Short Sword',
             equippedPotion: null  // Added here instead of trying to set it separately
         };
 
@@ -151,6 +151,11 @@ class GameLogic {
                 this.equippedBox.innerHTML = `<img src="${weapon.image}" alt="${this.inventory.equippedWeapon}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
             }
         }
+        
+        // Update equipment modal if it exists
+        if (window.equipmentModal && typeof window.equipmentModal.updateEquippedDisplay === 'function') {
+            window.equipmentModal.updateEquippedDisplay();
+        }
     }
 
     buyWeapon(weaponName) {
@@ -211,6 +216,11 @@ class GameLogic {
                 break;
         }
         this.updateUI();
+        
+        // Update equipment modal if it exists
+        if (window.equipmentModal && typeof window.equipmentModal.updateEquippedDisplay === 'function') {
+            window.equipmentModal.updateEquippedDisplay();
+        }
     }
 
     removeFromInventory(itemType, item = null, quantity = 1) {
@@ -218,6 +228,11 @@ class GameLogic {
             case 'healthPotion':
                 if (this.inventory.healthPotions >= quantity) {
                     this.inventory.healthPotions -= quantity;
+                    
+                    // Update equipment modal if it exists
+                    if (window.equipmentModal && typeof window.equipmentModal.populatePotions === 'function') {
+                        window.equipmentModal.populatePotions();
+                    }
                     return true;
                 }
                 return false;
@@ -228,6 +243,16 @@ class GameLogic {
                         this.inventory.weapons.splice(index, 1);
                         if (this.inventory.equippedWeapon === item) {
                             this.inventory.equippedWeapon = this.inventory.weapons[0] || null;
+                        }
+                        
+                        // Update equipment modal if it exists
+                        if (window.equipmentModal) {
+                            if (typeof window.equipmentModal.updateEquippedDisplay === 'function') {
+                                window.equipmentModal.updateEquippedDisplay();
+                            }
+                            if (typeof window.equipmentModal.populateWeapons === 'function') {
+                                window.equipmentModal.populateWeapons();
+                            }
                         }
                         return true;
                     }

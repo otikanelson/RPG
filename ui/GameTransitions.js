@@ -19,6 +19,7 @@ class TransitionManager {
         
         // Handle start button click
         this.startButton.addEventListener('click', () => {
+            console.log('Start button clicked in TransitionManager');
             this.startPage.style.display = 'none';
             this.gamePage.style.display = 'block';
             
@@ -29,7 +30,20 @@ class TransitionManager {
 
             setTimeout(() => {
                 this.gamePage.classList.add('visible');
-            }, 10);
+                
+                // Wait for dialogue manager to be ready
+                const startDialogue = () => {
+                    if (window.dialogueManager) {
+                        console.log('Starting Intro dialogue');
+                        window.dialogueManager.startDialogue('Intro');
+                    } else {
+                        console.log('DialogueManager not ready yet, waiting...');
+                        setTimeout(startDialogue, 50);
+                    }
+                };
+                
+                startDialogue();
+            }, 100);
         });
     }
 }

@@ -81,11 +81,8 @@ class TextManager {
             }
         });
         
-        // Hide equipped box when all buttons are hidden
-        if (this.equippedBox) {
-            console.log('Hiding equipped box');
-            this.equippedBox.style.display = 'none';
-        }
+        // Don't hide equipped box - it should always be visible
+        // The equipped box is independent of dialogue buttons
     }
 
     /**
@@ -104,11 +101,7 @@ class TextManager {
             }
         });
         
-        // Show equipped box when buttons are shown
-        if (this.equippedBox && choices && choices.length > 0) {
-            console.log('Showing equipped box');
-            this.equippedBox.style.display = 'flex';
-        }
+        // Equipped box should always be visible, not tied to button visibility
     }
     
     /**

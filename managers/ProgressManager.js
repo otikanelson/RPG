@@ -352,10 +352,18 @@ class DialogueManager {
      * Display the current text in the dialogue sequence
      */
     async displayCurrentText() {
-        if (!this.currentDialogue) return;
+        if (!this.currentDialogue) {
+            console.error('No current dialogue set!');
+            return;
+        }
         
         const currentText = this.currentDialogue.texts[this.currentTextIndex];
-        if (!currentText) return;
+        if (!currentText) {
+            console.error('No text found at index:', this.currentTextIndex);
+            return;
+        }
+
+        console.log('Displaying text:', currentText.content);
 
         const hasNextText = 
             this.currentTextIndex < this.currentDialogue.texts.length - 1 && 
@@ -375,6 +383,7 @@ class DialogueManager {
         }
         
         if (currentText.choices) {
+            console.log('Setting up choices:', currentText.choices);
             this.setupChoices(currentText.choices);
         }
     }
@@ -471,10 +480,18 @@ class DialogueManager {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const dialogueManager = new DialogueManager();
-    document.getElementById('startButton').addEventListener('click', () => {
-        dialogueManager.startDialogue('Intro');
-    });
+    console.log('ProgressManager: DOMContentLoaded fired');
+    
+    try {
+        const dialogueManager = new DialogueManager();
+        
+        // Store globally so TransitionManager can access it
+        window.dialogueManager = dialogueManager;
+        console.log('DialogueManager initialized and stored on window object');
+    } catch (error) {
+        console.error('Failed to initialize DialogueManager:', error);
+        console.error('Error stack:', error.stack);
+    }
 });
 
 export default DialogueManager;

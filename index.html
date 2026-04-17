@@ -6,8 +6,35 @@
     <title>S.O.T.A</title>
     <link rel="stylesheet" href="style.css"></link>
     <link rel="icon" href="Assets/Витая Бездна.jpg">
+    <script type="module" src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
+    <!-- Eerie Splash Screen -->
+    <div id="splashScreen">
+        <div class="splash-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="splash-content">
+            <h1 class="splash-title">Shadow of the Arcane</h1>
+            <p class="splash-message">The darkness awaits...</p>
+            <p class="splash-instruction">
+                For the best experience, please zoom out your browser<br>
+                (Press Ctrl + - or Cmd + - until the layout fits comfortably)
+            </p>
+            <button class="splash-continue" onclick="dismissSplash()">Enter the Realm</button>
+        </div>
+    </div>
+
     <div class="container">
         <div id="popup1" class="popup">
             <h2>Settings</h2><br>
@@ -73,13 +100,11 @@
 
     <!-- Game Page -->
     <div id="gamePage">
-        <audio id="background-audio" muted autoplay loop>
+        <audio id="background-audio" muted loop>
             <source src="Assets/rpg game audio.mp4" type="audio/mpeg">
-            Your browser does not support the audio element.
         </audio> 
-        <audio id="button-sound" muted autoplay loop>
+        <audio id="button-sound" muted>
             <source src="Assets/button-click.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
         </audio>
 
         <!-- navbar -->
@@ -140,7 +165,7 @@
 
     <!-- Character Image -->
     <div id="Info">
-        <img class="CharImg" src="Assets/character-placeholder.png" alt="Eliza">
+        <img class="CharImg" src="Assets/Eliza.webp" alt="Eliza">
     </div>
     
     <!-- MONSTER STATS - Replaces character info during battle -->
@@ -172,50 +197,119 @@
                 
                 <div class="storyFunctions">
                     <div class="dialogue">
-                        <div class="equipped">
-                            <span id="equippedText">Equipped Items</span>
+                        <div class="dialogueBtns">
+                            <button id="button1" style="display: none;"></button>
+                            <button id="button2" style="display: none;"></button>
+                            <button id="button3" style="display: none;"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="toggle-button-container">
+                        <button class="toggle-stats-equipment" onclick="toggleStatsEquipment()" id="toggleBtn">
+                            <ion-icon name="knife"></ion-icon>
+                        </button>
+                    </div>
+                    
+                    <div class="equipped-stats-container">
+                        <!-- Equipment Box -->
+                        <div class="equipped" id="equippedContainer" style="display: flex;">
+                            <span id="equippedText">Equipped Weapon</span>
                             <div class="equippedBox" id="equippedBox">
                                 <span class="equipped-placeholder">Click to view</span>
                             </div>
                         </div>
                         
-                        <div class="dialogueBtns">
-                            <button id="button1">Dodge</button>
-                            <button id="button2">Counter</button>
-                            <button id="button3">Use Potion</button>
+                        <!-- Player Stats Box -->
+                        <div class="player-stats-box" id="playerStatsContainer" style="display: none;">
+                            <div class="stats-content">
+                                <div class="stat-row">
+                                    <span class="stat-label">Level:</span>
+                                    <div class="stat-bar-container">
+                                        <div class="stat-bar">
+                                            <div class="stat-bar-fill" id="levelBarFill"></div>
+                                        </div>
+                                    </div>
+                                    <span class="stat-value" id="levelValue">1</span>
+                                </div>
+                                
+                                <div class="stat-row">
+                                    <span class="stat-label">Health:</span>
+                                    <div class="stat-bar-container">
+                                        <div class="stat-bar health-bar">
+                                            <div class="stat-bar-fill health-fill" id="healthBarFill"></div>
+                                        </div>
+                                    </div>
+                                    <span class="stat-value health-value" id="healthValue">100</span>
+                                </div>
+                                
+                                <div class="stat-row">
+                                    <span class="stat-label">Gold:</span>
+                                    <div class="gold-display">
+                                        <img src="Assets/goldImg.png" alt="Gold" class="gold-icon">
+                                        <span class="stat-value gold-value" id="goldValue">50</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="playerInfo">
-                    <div class="playerStats">
-                        <div class="experience">
-                            <span class="stat">Level: </span>
-                            <div class="progress-container">
-                                <div class="progress-bar xpBar"></div>
+                <!-- Equipment Modal -->
+                <div id="equipmentModal" class="equipment-modal">
+                    <div class="equipment-modal-content">
+                        <div class="equipment-modal-header">
+                            <h2>Equipment</h2>
+                            <button class="equipment-modal-close" onclick="closeEquipmentModal()">
+                                <ion-icon name="close"></ion-icon>
+                            </button>
+                        </div>
+                        
+                        <div class="equipment-modal-body">
+                            <!-- Inventory Section -->
+                            <div class="equipment-section-container">
+                                <h3 class="equipment-section-title">Inventory</h3>
+                                
+                                <!-- Weapons Subsection -->
+                                <div class="equipment-subsection">
+                                    <h4 class="equipment-subsection-title">Weapons</h4>
+                                    <div class="equipment-drop-zone" id="inventoryWeaponsZone">
+                                        <div class="equipment-grid" id="weaponsGrid">
+                                            <!-- Weapons will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Potions Subsection -->
+                                <div class="equipment-subsection">
+                                    <h4 class="equipment-subsection-title">Potions</h4>
+                                    <div class="equipment-drop-zone" id="inventoryPotionsZone">
+                                        <div class="equipment-grid" id="potionsGrid">
+                                            <!-- Potions will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <strong><span id="xpText"></span></strong>
-                        </div>
-                        <div class="health">
-                            <span class="stat">Health:</span>
-                            <div class="health-bar-container">
-                                <div class="healthBar"></div>
+                            
+                            <!-- Equipped Section -->
+                            <div class="equipment-section-container">
+                                <h3 class="equipment-section-title">Equipped</h3>
+                                
+                                <!-- Equipped Weapons -->
+                                <div class="equipment-subsection">
+                                    <h4 class="equipment-subsection-title">Weapon</h4>
+                                    <div class="equipment-drop-zone equipped-zone" id="equippedWeaponZone">
+                                        <!-- Equipped weapon will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                                
+                                <!-- Equipped Potions -->
+                                <div class="equipment-subsection">
+                                    <h4 class="equipment-subsection-title">Potion</h4>
+                                    <div class="equipment-drop-zone equipped-zone" id="equippedPotionZone">
+                                        <!-- Equipped potion will be populated by JavaScript -->
+                                    </div>
+                                </div>
                             </div>
-                            <strong><span id="healthText">90</span></strong>
-                        </div>
-                        <div class="Money">
-                            <span class="stat">Gold:</span>
-                            <img id="goldCoin" src="Assets/goldImg.png">
-                            <strong><span id="goldText">50</span></strong>
-                        </div>
-                    </div>
-                    <div id="inventory">
-                        <div id="collection" class="WeaponsCollection">
-                            <strong><span class="stat">Weapons: </strong></span><span id="weaponsText">Rusty Knife, Short Sword, Steel Axe</span>
-                            <img>
-                        </div>
-                        <div id="collection" class="PotionsCollection">
-                            <strong><span class="stat">Potions: </strong></span><span id="potionsText">Health Potions: 2</span>
                         </div>
                     </div>
                 </div>
@@ -228,7 +322,6 @@
     <script type="module" src="core/GameLogic.js"></script>
     <script type="module" src="core/GameStorage.js"></script>
     <script type="module" src="core/GameSettings.js"></script>
-    <script type="module" src="ui/GameTransitions.js"></script>
     <script type="module" src="ui/TextDesignManager.js"></script>
     <script type="module" src="managers/ProgressManager.js"></script>
     <script type="module" src="managers/DialogueManager.js"></script>
@@ -237,14 +330,96 @@
     <script type="module" src="systems/BattleActions.js"></script>
     <script type="module" src="systems/BattlePreparation.js"></script>
     <script type="module" src="systems/BattleLogic.js"></script>
+    <script type="module" src="ui/GameTransitions.js"></script>
+    <script type="module" src="ui/EquipmentModal.js"></script>
+    
+    <!-- Initialize Equipment Modal -->
+    <script type="module">
+        import EquipmentModal from './ui/EquipmentModal.js';
+        
+        // Wait for gameLogic to be available
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('=== DOM Content Loaded ===');
+            
+            const initEquipmentModal = () => {
+                if (window.gameLogic) {
+                    window.equipmentModal = new EquipmentModal(window.gameLogic);
+                    console.log('Equipment modal initialized');
+                } else {
+                    setTimeout(initEquipmentModal, 100);
+                }
+            };
+            initEquipmentModal();
+        });
+    </script>
 
     <!-- Equipped box toggle -->
     <script>
+    function toggleStatsEquipment() {
+        const equippedContainer = document.getElementById('equippedContainer');
+        const playerStatsContainer = document.getElementById('playerStatsContainer');
+        const toggleBtn = document.getElementById('toggleBtn');
+        
+        if (equippedContainer.style.display === 'none') {
+            equippedContainer.style.display = 'flex';
+            playerStatsContainer.style.display = 'none';
+            // Show equipment icon
+            toggleBtn.innerHTML = '<ion-icon name="bag-handle"></ion-icon>';
+        } else {
+            equippedContainer.style.display = 'none';
+            playerStatsContainer.style.display = 'block';
+            updatePlayerStatsDisplay();
+            // Show stats icon
+            toggleBtn.innerHTML = '<ion-icon name="stats-chart"></ion-icon>';
+        }
+    }
+    
+    function updatePlayerStatsDisplay() {
+        if (!window.gameLogic || !window.gameLogic.stats) return;
+        
+        const stats = window.gameLogic.stats;
+        const health = stats.health;
+        const maxHealth = stats.maxHealth;
+        const level = stats.level;
+        const xp = stats.xp;
+        const gold = stats.gold;
+        
+        // Update level bar based on XP progress (assuming 100 XP per level)
+        const xpPerLevel = 100;
+        const xpInCurrentLevel = xp % xpPerLevel;
+        const levelPercent = (xpInCurrentLevel / xpPerLevel) * 100;
+        const levelBarFill = document.getElementById('levelBarFill');
+        if (levelBarFill) {
+            levelBarFill.style.width = levelPercent + '%';
+        }
+        
+        // Health bar is always 100% width - no need to update width
+        // Just update the health value display
+        
+        // Update values
+        const levelValue = document.getElementById('levelValue');
+        if (levelValue) {
+            levelValue.textContent = level;
+        }
+        
+        const healthValue = document.getElementById('healthValue');
+        if (healthValue) {
+            healthValue.textContent = health;
+        }
+        
+        const goldValue = document.getElementById('goldValue');
+        if (goldValue) {
+            goldValue.textContent = gold;
+        }
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
         const equippedBox = document.getElementById('equippedBox');
         if (equippedBox) {
             equippedBox.addEventListener('click', function() {
-                this.classList.toggle('expanded');
+                if (window.equipmentModal) {
+                    window.equipmentModal.open();
+                }
             });
         }
     });
@@ -255,7 +430,25 @@
     </script>
 
     <!-- Character & Monster Helper Functions -->
-    <script src="helpers/CharacterManager.js"></script>
+    <script type="module" src="managers/CharacterManager.js"></script>
+    
+    <!-- Splash Screen Script -->
+    <script>
+    function dismissSplash() {
+        const splash = document.getElementById('splashScreen');
+        const startPage = document.getElementById('startPage');
+        
+        splash.classList.add('hidden');
+        
+        setTimeout(() => {
+            splash.style.display = 'none';
+            // Show the start page after splash is hidden
+            if (startPage) {
+                startPage.classList.add('visible');
+            }
+        }, 2000);
+    }
+    </script>
     
     <script>
     // Toggle character description
