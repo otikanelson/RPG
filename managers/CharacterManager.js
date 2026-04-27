@@ -66,7 +66,7 @@ class CharacterManager {
                 },
                 "Eliza": {
                     name: "Eliza",
-                    image: "Assets/Eliza.webp",
+                    image: "Assets/Eliza.png",
                     description: "A mysterious woman whose beauty belies her enigmatic nature. Eliza's presence carries an otherworldly grace, her movements fluid and deliberate. Her knowledge of ancient artifacts and forgotten lore hints at a past deeply intertwined with the realm's most guarded secrets. The gentle smile she wears often masks calculations happening behind her keen eyes.",
                     level: "Unknown",
                     bio: "A mysterious woman with knowledge of ancient artifacts."
