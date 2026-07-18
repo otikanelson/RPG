@@ -1,17 +1,24 @@
 class SettingsManager {
   constructor() {
     // DOM Elements
-    this.volumeSlider = document.getElementById("volumeSlider");
-    this.musicSlider = document.getElementById("musicSlider");
+    this.volumeSliders = document.querySelectorAll(".volume-slider");
+    this.musicSliders = document.querySelectorAll(".music-slider");
     this.characterInfo = document.getElementById("characterInfo");
     this.audio = document.getElementById("background-audio");
+
+    // Start page sidebars
+    this.sidebarOverlay = document.getElementById("sidebarOverlay");
+    this.settingsSidebar = document.getElementById("settingsSidebar");
+    this.aboutSidebar = document.getElementById("aboutSidebar");
+    this.openSettingsLink = document.getElementById("openSettings");
+    this.openAboutLink = document.getElementById("openAbout");
 
     // Popup Elements
     this.popups = {
       settings: {
         element: document.getElementById("popup1"),
         trigger: document.querySelector(".settings-menu"),
-      },      
+      },
       Audio: {
         element: document.getElementById("popup1"),
         trigger: document.querySelector(".settings-menu"),
@@ -35,16 +42,19 @@ class SettingsManager {
 
     // State
     this.isSidebarVisible = false;
+    this.activeNavSidebar = null;
 
     this.initializeEventListeners();
   }
 
   initializeEventListeners() {
     // Volume Controls
-    this.volumeSlider.addEventListener("input", () =>
-      this.handleVolumeChange()
-    );
-    this.musicSlider.addEventListener("input", () => this.handleMusicChange());
+    this.volumeSliders.forEach((slider) => {
+      slider.addEventListener("input", () => this.handleVolumeChange(slider));
+    });
+    this.musicSliders.forEach((slider) => {
+      slider.addEventListener("input", () => this.handleMusicChange(slider));
+    });
 
     // Add sound to all buttons
     document.querySelectorAll("button, #size-6").forEach((button) => {
@@ -61,6 +71,22 @@ class SettingsManager {
       }
     });
 
+    // Start page sidebar triggers
+    this.openSettingsLink?.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.openNavSidebar("settings");
+    });
+    this.openAboutLink?.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.openNavSidebar("about");
+    });
+
+    this.sidebarOverlay?.addEventListener("click", () => this.closeNavSidebars());
+
+    document.querySelectorAll(".nav-sidebar .sidebar-close").forEach((button) => {
+      button.addEventListener("click", () => this.closeNavSidebars());
+    });
+
     // Close popups on outside click
     document.addEventListener("click", (event) => {
       if (
@@ -74,10 +100,10 @@ class SettingsManager {
     // Display Controls
     document
       .querySelector(".fullscreen")
-      .addEventListener("click", () => this.toggleFullscreen());
+      ?.addEventListener("click", () => this.toggleFullscreen());
     document
       .querySelector(".side-menu")
-      .addEventListener("click", () => this.toggleSidebar());
+      ?.addEventListener("click", () => this.toggleSidebar());
 
     // Close buttons
     document.querySelectorAll(".closeBtn").forEach((button) => {
@@ -87,6 +113,7 @@ class SettingsManager {
     // Escape key
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
+        this.closeNavSidebars();
         this.closeAllPopups();
         if (document.fullscreenElement) {
           this.exitFullscreen();
@@ -95,14 +122,24 @@ class SettingsManager {
     });
   }
 
-  handleVolumeChange() {
-    const volume = parseFloat(this.volumeSlider.value);
+  syncSliders(sliders, value) {
+    sliders.forEach((slider) => {
+      slider.value = value;
+    });
+  }
+
+  handleVolumeChange(sourceSlider) {
+    const volume = parseFloat(sourceSlider.value);
+    this.syncSliders(this.volumeSliders, volume);
     this.buttonSound.volume = volume;
   }
 
-  handleMusicChange() {
-    const volume = parseFloat(this.musicSlider.value);
-    this.audio.volume = volume;
+  handleMusicChange(sourceSlider) {
+    const volume = parseFloat(sourceSlider.value);
+    this.syncSliders(this.musicSliders, volume);
+    if (this.audio) {
+      this.audio.volume = volume;
+    }
   }
 
   playButtonSound() {
@@ -112,7 +149,30 @@ class SettingsManager {
       .catch((e) => console.warn("Button sound failed:", e));
   }
 
+  openNavSidebar(type) {
+    this.closeAllPopups();
+    this.closeNavSidebars();
+
+    const sidebar =
+      type === "settings" ? this.settingsSidebar : this.aboutSidebar;
+    if (!sidebar) return;
+
+    sidebar.classList.add("open");
+    this.sidebarOverlay?.classList.add("visible");
+    this.activeNavSidebar = type;
+    document.body.classList.add("sidebar-active");
+  }
+
+  closeNavSidebars() {
+    this.settingsSidebar?.classList.remove("open");
+    this.aboutSidebar?.classList.remove("open");
+    this.sidebarOverlay?.classList.remove("visible");
+    this.activeNavSidebar = null;
+    document.body.classList.remove("sidebar-active");
+  }
+
   openPopup(popupId) {
+    this.closeNavSidebars();
     this.closeAllPopups();
     const popup = this.popups[popupId];
     if (popup && popup.element) {
@@ -163,3 +223,6 @@ class SettingsManager {
 
 // Initialize settings manager
 const settingsManager = new SettingsManager();
+
+window.openPopup = (popupId = "settings") => settingsManager.openPopup(popupId);
+window.closePopup = () => settingsManager.closeAllPopups();

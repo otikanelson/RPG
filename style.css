@@ -709,7 +709,8 @@ body::-webkit-scrollbar {
     background: linear-gradient(to right, #ccc 0%, var(--primary-blue-dark) 100%);
 }
 
-#volumeSlider, #musicSlider {
+#volumeSlider, #musicSlider,
+.volume-slider, .music-slider {
     cursor: pointer;
 }
 
@@ -854,36 +855,134 @@ ul li a:hover {
     100% { background-position: 0% 50%; }
 }
 
-ul li ul.dropdown {
-    width: 100%;
-    background: rgba(3, 13, 27, 0.95);
-    backdrop-filter: blur(10px);
-    position: absolute;
-    z-index: 999;
-    display: none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
+/* ========== START PAGE NAV SIDEBARS ========== */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.sidebar-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.sidebar-active {
     overflow: hidden;
+}
+
+.nav-sidebar {
+    position: fixed;
+    top: 0;
+    width: min(360px, 88vw);
+    height: 100vh;
+    padding: var(--spacing-lg);
+    background: linear-gradient(180deg, rgba(3, 13, 27, 0.98) 0%, rgba(8, 2, 46, 0.98) 100%);
+    border: 1px solid rgba(74, 144, 226, 0.25);
+    box-shadow: var(--shadow-lg);
+    z-index: 201;
+    overflow-y: auto;
+    transition: transform var(--transition-normal);
+}
+
+.nav-sidebar--left {
+    left: 0;
+    transform: translateX(-100%);
+}
+
+.nav-sidebar--right {
+    right: 0;
+    transform: translateX(100%);
+}
+
+.nav-sidebar.open {
+    transform: translateX(0);
+}
+
+.nav-sidebar h2 {
+    color: var(--text-light);
+    font-size: 28px;
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-sidebar .functions h4 {
+    color: var(--primary-blue-light);
+}
+
+.nav-sidebar .sound img {
+    width: 24px;
+    height: 24px;
+}
+
+.sidebar-close {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    font-size: 22px;
+    cursor: pointer;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.sidebar-close ion-icon {
+    pointer-events: none;
+}
+
+.sidebar-close:hover {
+    background: rgba(74, 144, 226, 0.35);
+    transform: scale(1.05);
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    color: var(--text-light);
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+.about-content p {
+    margin: 0;
+}
+
+.github-link {
+    display: inline-block;
+    margin-top: var(--spacing-sm);
+    padding: 12px 18px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.github-link:hover {
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
 
-ul li ul.dropdown li {
-    display: block;
-}
-
-ul li:hover ul.dropdown {
-    display: block;
-    animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+#openSettings,
+#openAbout {
+    cursor: pointer;
 }
 
 /* Video Background */
@@ -1441,9 +1540,16 @@ ul li:hover ul.dropdown {
     transform: scale(1.1);
 }
 
-.toggle-stats-equipment ion-icon {
+.toggle-stats-equipment ion-icon,
+.toggle-stats-equipment .toggle-icon {
     font-size: 20px;
     pointer-events: none;
+}
+
+.toggle-stats-equipment .toggle-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
 }
 
 .player-stats-box {

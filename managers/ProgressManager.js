@@ -487,6 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Store globally so TransitionManager can access it
         window.dialogueManager = dialogueManager;
+        window.characterManager = dialogueManager.characterManager;
         console.log('DialogueManager initialized and stored on window object');
     } catch (error) {
         console.error('Failed to initialize DialogueManager:', error);

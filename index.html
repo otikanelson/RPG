@@ -43,11 +43,11 @@
                 <div class="music">
                     <svg id="size-6" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 24 24">
                     <path id="size-6" d="M 19.6875 2 L 8.6875 3.5 C 7.6875 3.601563 7 4.5 7 5.5 L 7 15.78125 C 6.539063 15.699219 6.039063 15.699219 5.5 15.8125 C 3.601563 16.3125 2 17.988281 2 19.6875 C 2 21.386719 3.601563 22.40625 5.5 21.90625 C 7.398438 21.40625 9 19.699219 9 18 L 9 9.40625 L 20 7.9375 L 20 14.71875 C 19.539063 14.636719 19.039063 14.671875 18.5 14.8125 C 16.601563 15.3125 15 16.988281 15 18.6875 C 15 20.386719 16.601563 21.40625 18.5 20.90625 C 20.398438 20.40625 22 18.699219 22 17 L 22 4 C 22 2.800781 20.886719 1.898438 19.6875 2 Z">
-                    </path></svg><input type="range" min="0" max="1" step="0.01" value="0.5" id="musicSlider">
+                    </path></svg><input type="range" min="0" max="1" step="0.01" value="0.5" id="musicSlider" class="music-slider">
                 </div>
                 <h4>Sound</h4>
                 <div class="sound">
-                <img id="size-6" src="Assets/sound.png"><input type="range" min="0" max="1" step="0.01" value="0.5" id="volumeSlider">
+                <img id="size-6" src="Assets/sound.png"><input type="range" min="0" max="1" step="0.01" value="0.5" id="volumeSlider" class="volume-slider">
                 </div>
             </div>
             <button class="closeBtn" onclick="closePopup()"> Close</button> 
@@ -77,17 +77,49 @@
         <!-- navbar -->
         <nav class="NavBar">
             <ul>
-            <li>
-                <a href="#">Settings ▾</a>
-                <ul class="dropdown" onclick="openPopup()">
-                    <li id="Audio"><a href="#">Audio</a></li>
-                    <li id="Display"><a href="#">Display</a></li>
-                </ul>
-            </li>
+            <li><a href="#" id="openSettings">Settings</a></li>
             <li><a href="#" id="title">Shadow of the Arcane</a></li>
-            <li><a href="#">About</a></li>
+            <li><a href="#" id="openAbout">About</a></li>
             </ul>
         </nav>
+
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+        <aside id="settingsSidebar" class="nav-sidebar nav-sidebar--left">
+            <button class="sidebar-close" aria-label="Close settings">
+                <ion-icon name="close"></ion-icon>
+            </button>
+            <h2>Settings</h2>
+            <div class="functions">
+                <h4>Music</h4>
+                <div class="music">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M 19.6875 2 L 8.6875 3.5 C 7.6875 3.601563 7 4.5 7 5.5 L 7 15.78125 C 6.539063 15.699219 6.039063 15.699219 5.5 15.8125 C 3.601563 16.3125 2 17.988281 2 19.6875 C 2 21.386719 3.601563 22.40625 5.5 21.90625 C 7.398438 21.40625 9 19.699219 9 18 L 9 9.40625 L 20 7.9375 L 20 14.71875 C 19.539063 14.636719 19.039063 14.671875 18.5 14.8125 C 16.601563 15.3125 15 16.988281 15 18.6875 C 15 20.386719 16.601563 21.40625 18.5 20.90625 C 20.398438 20.40625 22 18.699219 22 17 L 22 4 C 22 2.800781 20.886719 1.898438 19.6875 2 Z"></path>
+                    </svg>
+                    <input type="range" min="0" max="1" step="0.01" value="0.5" class="music-slider">
+                </div>
+                <h4>Sound</h4>
+                <div class="sound">
+                    <img src="Assets/sound.png" alt="Sound">
+                    <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider">
+                </div>
+            </div>
+        </aside>
+
+        <aside id="aboutSidebar" class="nav-sidebar nav-sidebar--right">
+            <button class="sidebar-close" aria-label="Close about">
+                <ion-icon name="close"></ion-icon>
+            </button>
+            <h2>About</h2>
+            <div class="about-content">
+                <p><strong>Shadow of the Arcane</strong> is a text-based RPG built with vanilla JavaScript — a dark fantasy adventure where your choices shape the story.</p>
+                <p>Explore a world of arcane mystery, turn-based combat, immersive sound, and branching narrative paths as you guide Eliza through the shadows.</p>
+                <p>This project started as a way to learn JavaScript while building something I could actually play — and it grew into a full interactive experience.</p>
+                <a href="https://github.com/otikanelson" target="_blank" rel="noopener noreferrer" class="github-link">
+                    View more projects on GitHub →
+                </a>
+            </div>
+        </aside>
 
         <div id="video-container">
             <video autoplay muted loop id="background-video">
@@ -141,13 +173,9 @@
             <!-- LEFT SIDE: Character Info + Monster Stats -->
             <!-- LEFT SIDE: Character Info + Monster Stats -->
 <div id="characterInfo">
-    <!-- Character Header with Name and Level -->
+    <!-- Character Header with Name -->
     <div class="char">
         <p class="charName">Eliza</p>
-        <div class="char-level-indicator">
-            <img id="charLevelImage" src="Assets/level emblem.png" alt="Level">
-            <span id="charLevelText">5</span>
-        </div>
         <button class="Info" onclick="toggleCharacterDescription()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512" class="size-5">
                 <path fill="#1c2b45" d="M48 80a48 48 0 1 1 96 0A48 48 0 1 1 48 80zM0 224c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 224 32 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 512c-17.7 0-32-14.3-32-32s14.3-32 32-32l32 0 0-192-32 0c-17.7 0-32-14.3-32-32z"/>
@@ -163,9 +191,44 @@
         </p>
     </div>
 
-    <!-- Character Image -->
-    <div id="Info">
-        <img class="CharImg" src="Assets/Eliza.png" alt="Eliza">
+    <div class="character-display">
+        <!-- Character Image -->
+        <div id="Info">
+            <img class="CharImg" src="Assets/Eliza.png" alt="Eliza">
+        </div>
+
+        <!-- Character Stats (below image, hidden for location/road scenes) -->
+        <div id="characterStatsPanel" class="character-stats-panel">
+            <div class="stats-content sidebar-stats-content">
+                <div class="stat-row" id="sidebarLevelRow">
+                    <span class="stat-label">Level:</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar">
+                            <div class="stat-bar-fill" id="sidebarLevelBarFill"></div>
+                        </div>
+                    </div>
+                    <span class="stat-value" id="sidebarLevelValue">1</span>
+                </div>
+
+                <div class="stat-row" id="sidebarHealthRow">
+                    <span class="stat-label">Health:</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar health-bar">
+                            <div class="stat-bar-fill health-fill" id="sidebarHealthBarFill"></div>
+                        </div>
+                    </div>
+                    <span class="stat-value health-value" id="sidebarHealthValue">100</span>
+                </div>
+
+                <div class="stat-row" id="sidebarGoldRow">
+                    <span class="stat-label">Gold:</span>
+                    <div class="gold-display">
+                        <img src="Assets/goldImg.png" alt="Gold" class="gold-icon">
+                        <span class="stat-value gold-value" id="sidebarGoldValue">50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- MONSTER STATS - Replaces character info during battle -->
@@ -206,7 +269,7 @@
                     
                     <div class="toggle-button-container">
                         <button class="toggle-stats-equipment" onclick="toggleStatsEquipment()" id="toggleBtn">
-                            <ion-icon name="knife"></ion-icon>
+                            <img src="Assets/gem.png" alt="Stats" class="toggle-icon">
                         </button>
                     </div>
                     
@@ -364,13 +427,13 @@
             equippedContainer.style.display = 'flex';
             playerStatsContainer.style.display = 'none';
             // Show equipment icon
-            toggleBtn.innerHTML = '<ion-icon name="bag-handle"></ion-icon>';
+            toggleBtn.innerHTML = '<img src="Assets/backpack.png" alt="Equipment" class="toggle-icon">';
         } else {
             equippedContainer.style.display = 'none';
             playerStatsContainer.style.display = 'block';
             updatePlayerStatsDisplay();
             // Show stats icon
-            toggleBtn.innerHTML = '<ion-icon name="stats-chart"></ion-icon>';
+            toggleBtn.innerHTML = '<img src="Assets/gem.png" alt="Stats" class="toggle-icon">';
         }
     }
     
@@ -454,15 +517,9 @@
     // Toggle character description
     function toggleCharacterDescription() {
         const descr = document.getElementById('charDescription');
-        const levelIndicator = document.querySelector('.char-level-indicator');
-        
-        if (descr.style.display === 'none') {
-            descr.style.display = 'block';
-            if (levelIndicator) levelIndicator.style.display = 'none';
-        } else {
-            descr.style.display = 'none';
-            if (levelIndicator) levelIndicator.style.display = 'flex';
-        }
+        if (!descr) return;
+
+        descr.style.display = descr.style.display === 'none' ? 'block' : 'none';
     }
     </script>
 

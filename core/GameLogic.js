@@ -142,6 +142,10 @@ class GameLogic {
 
         // Update equipped weapon display
         this.updateEquippedWeapon();
+
+        if (window.characterManager?.refreshSidebarStats) {
+            window.characterManager.refreshSidebarStats();
+        }
     }
 
     updateEquippedWeapon() {
