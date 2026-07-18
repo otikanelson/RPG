@@ -1,3 +1,5 @@
+import CharacterComponent from '../ui/CharacterComponent.js';
+
 class CharacterManager {
     constructor() {
         this.characterInfo = document.getElementById('characterInfo');
@@ -15,6 +17,11 @@ class CharacterManager {
         this.sidebarHealthBarFill = document.getElementById('sidebarHealthBarFill');
         this.sidebarHealthValue = document.getElementById('sidebarHealthValue');
         this.sidebarGoldValue = document.getElementById('sidebarGoldValue');
+
+        // New character component system
+        this.currentCharacterComponent = null;
+        this.gameLogic = null;
+        this.battleManager = null;
 
         this.locations = {
             "Town Square": {
@@ -90,7 +97,7 @@ class CharacterManager {
             },
             "V'ial Imdall": {
                 name: "V'ial Imdall",
-                image: "Assets/V'ial imdall.webp",
+                image: "Assets/V'ial imdall.jpg",
                 description: "A powerful archmage and guardian of the realm. V'ial Imdall bears the weight of countless centuries, his weathered face marked by the wisdom of ages. His robes, adorned with intricate runes, pulse with barely contained magical energy. Despite his formidable presence, a hint of weariness shows in his ancient eyes, suggesting the burden of knowledge too heavy for most to bear.",
                 level: "Legendary",
                 bio: "A powerful mage tasked with maintaining peace in the realm."
@@ -159,6 +166,12 @@ class CharacterManager {
         }
     }
 
+    // Initialize references to game systems
+    initialize(gameLogic, battleManager) {
+        this.gameLogic = gameLogic;
+        this.battleManager = battleManager;
+    }
+
     resolveCharacterKey(name) {
         return this.characterAliases[name] || name;
     }
@@ -211,8 +224,9 @@ class CharacterManager {
             this.currentCharacterKey = characterKey;
             this.isShowingLocation = false;
             this.showCharacterInfo();
-            this.updateUI(characterData);
-            this.updateSidebarStats(characterKey, characterData);
+            
+            // Use new character component system
+            this.displayCharacterComponent(characterData);
             return;
         }
 
@@ -227,21 +241,66 @@ class CharacterManager {
             this.currentCharacterKey = null;
             this.isShowingLocation = true;
             this.showCharacterInfo();
-            this.updateUI({ ...locationData, name: dialogue.location });
-            this.hideSidebarStats();
+            this.displayLocationComponent({ ...locationData, name: dialogue.location });
             return;
         }
 
         this.hideCharacterInfo();
     }
 
-    updateUI(data) {
-        if (this.charName) this.charName.textContent = data.name;
-        if (this.charImg) {
-            this.charImg.src = data.image;
-            this.charImg.style.display = 'block';
+    displayCharacterComponent(characterData) {
+        // Clean up existing component
+        if (this.currentCharacterComponent) {
+            this.currentCharacterComponent.destroy();
         }
-        if (this.descrText) this.descrText.textContent = data.description;
+
+        // Create new character component with stats
+        this.currentCharacterComponent = new CharacterComponent(
+            characterData, 
+            this.gameLogic, 
+            this.battleManager
+        );
+
+        // Replace the content in characterInfo
+        this.clearCharacterInfoContent();
+        this.characterInfo.appendChild(this.currentCharacterComponent.getElement());
+    }
+
+    displayLocationComponent(locationData) {
+        // Clean up existing component
+        if (this.currentCharacterComponent) {
+            this.currentCharacterComponent.destroy();
+            this.currentCharacterComponent = null;
+        }
+
+        // For locations, show traditional image-only display (no stats)
+        this.clearCharacterInfoContent();
+        this.updateUI(locationData);
+    }
+
+    clearCharacterInfoContent() {
+        // Clear the characterInfo container but keep the structure
+        while (this.characterInfo.firstChild) {
+            this.characterInfo.removeChild(this.characterInfo.firstChild);
+        }
+    }
+
+    updateUI(data) {
+        // This is used for locations only now
+        const locationHTML = `
+            <div class="location-display">
+                <div class="location-header">
+                    <h3 class="location-name">${data.name}</h3>
+                </div>
+                <div class="location-image-container">
+                    <img class="location-image" src="${data.image}" alt="${data.name}">
+                </div>
+                <div class="location-description">
+                    <p class="location-description-text">${data.description}</p>
+                </div>
+            </div>
+        `;
+        this.characterInfo.innerHTML = locationHTML;
     }
 
     hideSidebarStats() {
@@ -338,6 +397,13 @@ class CharacterManager {
     }
 
     refreshSidebarStats() {
+        // Update character component stats if it exists
+        if (this.currentCharacterComponent) {
+            this.currentCharacterComponent.refresh();
+            return;
+        }
+
+        // Fallback to legacy system
         if (this.isShowingLocation || !this.currentCharacterKey) {
             this.hideSidebarStats();
             return;
@@ -367,6 +433,14 @@ class CharacterManager {
         if (this.descr) this.descr.style.display = 'none';
         if (this.charImg) this.charImg.style.display = 'block';
         this.updateDisplay(dialogue);
+    }
+
+    // Cleanup method
+    destroy() {
+        if (this.currentCharacterComponent) {
+            this.currentCharacterComponent.destroy();
+            this.currentCharacterComponent = null;
+        }
     }
 }
 

@@ -16,6 +16,9 @@ class DialogueManager {
         this.pendingBattleResult = null;
         this.actionInProgress = false;
 
+        // Initialize CharacterManager with game system references
+        this.characterManager.initialize(this.gameLogic, this.battleManager);
+
         this.button1 = document.getElementById('button1');
         this.button2 = document.getElementById('button2');
         this.button3 = document.getElementById('button3');

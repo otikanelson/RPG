@@ -5,7 +5,7 @@ export const DIALOGUES = {
         sequence: "Sequence 1: The Shattered Bazaar",
         characters: ["V'ial Imdall", "Player"],
         texts: [
-            {content: "\"Welcome [[ Rift Walker ! ]] I am the Great mage of this region..... And you my friend are what is called an \"Avatar\" \"",
+            {content: "\"Welcome [[ Rift Walker ! ]] I am the Great mage of this region..... And you my friend are an \"Avatar\" \"",
                 choices: [
                     { text: "Where is ...Who are you...exactly?", nextDialogue: "mageIntro" },
                     { text: "What is an avatar?", nextDialogue: "avatarDefined" }

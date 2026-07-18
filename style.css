@@ -104,6 +104,16 @@ body::-webkit-scrollbar {
     align-items: center;
 }
 
+/* Battle preparation mode styling */
+.equipment-modal.battle-prep-mode {
+    background: rgba(20, 0, 0, 0.9);
+}
+
+.equipment-modal.battle-prep-mode .equipment-modal-content {
+    border-color: rgba(255, 69, 0, 0.7);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 69, 0, 0.4);
+}
+
 .equipment-modal-content {
     background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
     border: 3px solid rgba(74, 144, 226, 0.5);
@@ -139,6 +149,11 @@ body::-webkit-scrollbar {
     color: var(--primary-blue-light);
     text-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
     margin: 0;
+}
+
+.battle-prep-mode .equipment-modal-header h2 {
+    color: #ff6b35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.6);
 }
 
 .equipment-modal-close {
@@ -224,6 +239,10 @@ body::-webkit-scrollbar {
     gap: var(--spacing-sm);
 }
 
+.equipment-section-title span {
+    font-size: 28px;
+}
+
 .equipment-section-title::before {
     content: '';
     width: 30px;
@@ -270,6 +289,67 @@ body::-webkit-scrollbar {
 .equipped-zone .equipment-item {
     width: 100%;
     min-height: 140px;
+}
+
+/* Battle Ready Footer */
+.battle-ready-footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    border-top: 2px solid rgba(255, 107, 53, 0.3);
+    background: rgba(255, 107, 53, 0.05);
+    border-radius: var(--radius-md);
+}
+
+.battle-prep-message {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.battle-prep-message strong {
+    color: #ff6b35;
+}
+
+.battle-ready-btn {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%);
+    border: 2px solid rgba(255, 107, 53, 0.8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+    align-self: center;
+    min-width: 200px;
+    animation: battlePulse 2s ease-in-out infinite;
+}
+
+@keyframes battlePulse {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 107, 53, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 107, 53, 0.8);
+        transform: scale(1.02);
+    }
+}
+
+.battle-ready-btn:hover {
+    background: linear-gradient(135deg, #ff7f4d 0%, #ff5722 100%);
+    border-color: rgba(255, 127, 77, 1);
+    transform: scale(1.05);
+    animation: none;
+}
+
+.battle-ready-btn:active {
+    transform: scale(0.98);
 }
 
 .equipment-unequip-btn {
@@ -370,6 +450,18 @@ body::-webkit-scrollbar {
     font-weight: bold;
 }
 
+.equipment-item-defense {
+    color: var(--primary-blue-light);
+    font-weight: bold;
+}
+
+.equipment-item-type {
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: capitalize;
+    font-size: 9px;
+    margin-top: 2px;
+}
+
 .equipment-item-cost {
     color: var(--warning-yellow);
     font-weight: bold;
@@ -380,6 +472,122 @@ body::-webkit-scrollbar {
     padding: var(--spacing-lg);
     color: rgba(255, 255, 255, 0.5);
     font-style: italic;
+}
+
+.armor-slot-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    border: 2px dashed rgba(74, 144, 226, 0.3);
+    border-radius: var(--radius-md);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.armor-slot-label {
+    font-weight: bold;
+    color: var(--primary-blue-light);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.equipment-armor-slot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Equipment Box Styling */
+.equippedBox {
+    position: relative;
+    overflow: visible !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid rgba(74, 144, 226, 0.5) !important;
+    background: linear-gradient(135deg, rgba(28, 43, 69, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%) !important;
+    border-radius: 8px;
+    padding: 12px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.clickable-equipment {
+    position: relative;
+    overflow: visible !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid rgba(74, 144, 226, 0.5) !important;
+    background: linear-gradient(135deg, rgba(28, 43, 69, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%) !important;
+}
+
+.equippedBox:hover, .clickable-equipment:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4) !important;
+    border-color: rgba(74, 144, 226, 0.8) !important;
+}
+
+.equippedBox:active, .clickable-equipment:active {
+    transform: scale(0.98) !important;
+}
+
+.equipment-hint {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary-blue);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.6);
+    animation: equipmentHint 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes equipmentHint {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(74, 144, 226, 0.6);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.8);
+    }
+}
+
+.equipped-placeholder {
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-align: center !important;
+    pointer-events: none;
+}
+
+.equipped-weapon-img {
+    max-width: 40px;
+    max-height: 30px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.equipped-weapon-name {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin-top: 4px;
+    pointer-events: none;
 }
 
 /* ========== EERIE SPLASH SCREEN ========== */
@@ -2705,13 +2913,21 @@ ul li a {
     overflow: hidden;
 }
 
-/* ========== CHARACTER INFO - LEFT SIDEBAR ========== */
+/* Fullscreen mode - take full viewport height */
+:fullscreen #Game,
+:-webkit-full-screen #Game,
+:-moz-full-screen #Game {
+    height: 100vh;
+}
+
+/* ========== CHARACTER INFO - LEFT SIDEBAR - CONSISTENT DIMENSIONS ========== */
 #characterInfo {
     display: flex;
     width: 340px;
     min-width: 320px;
     max-width: 380px;
     height: 100%;
+    min-height: 500px;
     border-radius: var(--radius-md);
     background: linear-gradient(135deg, rgb(8, 2, 46) 0%, rgb(4, 1, 23) 100%);
     flex-direction: column;
@@ -2719,6 +2935,14 @@ ul li a {
     box-shadow: var(--shadow-lg);
     overflow: hidden;
     position: relative;
+}
+}
+
+/* Fullscreen mode - remove max-height constraint */
+:fullscreen #characterInfo,
+:-webkit-full-screen #characterInfo,
+:-moz-full-screen #characterInfo {
+    max-height: none;
 }
 
 
@@ -2900,6 +3124,486 @@ ul li a {
     }
 }
 
+
+/* ========== CHARACTER COMPONENT SYSTEM - CONSISTENT IMAGE DIMENSIONS ========== */
+.character-component {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, rgb(8, 2, 46) 0%, rgb(4, 1, 23) 100%);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+}
+
+.character-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid rgba(74, 144, 226, 0.3);
+    height: 60px; /* Fixed header height */
+    flex-shrink: 0;
+}
+
+.character-name {
+    font-family: 'EnglishTowne', serif;
+    font-size: 22px;
+    color: #4a90e2;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 40px);
+}
+
+.character-info-btn {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #4a90e2;
+    background: rgba(74, 144, 226, 0.2);
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.character-info-btn:hover {
+    background: rgba(74, 144, 226, 0.4);
+    transform: scale(1.1);
+}
+
+.info-icon {
+    width: 100%;
+    height: 100%;
+    fill: #4a90e2;
+}
+
+.character-description {
+    position: absolute;
+    top: 60px;
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    bottom: var(--spacing-sm);
+    background: rgba(34, 104, 209, 0.9);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.character-description-text {
+    color: white;
+    font-size: 14px;
+    line-height: 1.6;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.character-bio {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.character-display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+    min-height: 0; /* Important for flex layout */
+}
+
+/* CHARACTER IMAGE - CONSISTENT DIMENSIONS WITH COMPACT STATS */
+.character-image-container {
+    width: 100%;
+    height: 320px; /* Increased to accommodate smaller stats panel */
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.character-image-container.no-stats {
+    height: 400px; /* Larger height when no stats panel needed */
+}
+
+.character-image {
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(0, 0, 0, 0.8);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+    object-fit: cover;
+    box-shadow: var(--shadow-lg);
+}
+
+/* STATS PANEL - COMPACT SIZE */
+.character-stats-panel {
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(74, 144, 226, 0.3);
+    border-radius: var(--radius-md);
+    padding: 8px;
+    height: 80px; /* Much smaller stats panel */
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.character-stats-panel .stats-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 100%;
+    justify-content: space-evenly;
+}
+
+.character-stats-panel .stat-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 20px; /* Smaller row height */
+}
+
+.character-stats-panel .stat-label {
+    font-family: 'EnglishTowne', serif;
+    font-size: 11px; /* Smaller font */
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    min-width: 45px;
+    flex-shrink: 0;
+}
+
+.character-stats-panel .stat-text-value {
+    color: var(--primary-blue-light);
+    font-weight: bold;
+    font-size: 11px; /* Smaller font */
+    text-shadow: 0 0 8px rgba(74, 144, 226, 0.6);
+}
+
+.character-stats-panel .rank-value {
+    color: var(--warning-yellow);
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(246, 194, 4, 0.6);
+}
+
+/* ENHANCED STAT BAR CONSISTENCY - COMPACT SIZE */
+.character-stats-panel .stat-bar-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 16px; /* Smaller height for stat bar containers */
+}
+
+.character-stats-panel .stat-bar {
+    width: 100%;
+    height: 6px; /* Thinner bar height */
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.character-stats-panel .stat-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, #0a0223, #0008a3);
+    width: 1%;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.character-stats-panel .stat-bar.health-bar {
+    border-color: rgba(14, 194, 14, 0.5);
+}
+
+.character-stats-panel .stat-bar-fill.health-fill {
+    background: linear-gradient(to right, #0ec20e, #0a9b0a);
+    width: 100%;
+    box-shadow: 0 0 6px rgba(14, 194, 14, 0.6);
+}
+
+.character-stats-panel .stat-value {
+    font-size: 11px; /* Smaller font */
+    color: var(--primary-blue-light);
+    font-weight: bold;
+    text-shadow: 0 0 6px rgba(74, 144, 226, 0.6);
+    min-width: 28px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.character-stats-panel .stat-value.health-value {
+    color: var(--success-green);
+    text-shadow: 0 0 6px rgba(14, 194, 14, 0.6);
+}
+
+.character-stats-panel .gold-display {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-end;
+}
+
+.character-stats-panel .gold-icon {
+    width: 14px; /* Smaller icon */
+    height: 14px;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+    flex-shrink: 0;
+}
+
+.character-stats-panel .stat-value.gold-value {
+    color: var(--warning-yellow);
+    text-shadow: 0 0 6px rgba(246, 194, 4, 0.6);
+    font-size: 11px;
+}
+
+/* LOCATION DISPLAY - CONSISTENT DIMENSIONS */
+.location-display {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, rgb(8, 2, 46) 0%, rgb(4, 1, 23) 100%);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.location-header {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid rgba(74, 144, 226, 0.3);
+    height: 60px; /* Same height as character header */
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.location-name {
+    font-family: 'EnglishTowne', serif;
+    font-size: 22px;
+    color: #4a90e2;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.location-image-container {
+    height: 320px; /* Fixed height for location images */
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-sm);
+    overflow: hidden;
+}
+
+.location-image {
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(0, 0, 0, 0.8);
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    box-shadow: var(--shadow-lg);
+}
+
+.location-description {
+    flex: 1;
+    padding: var(--spacing-md);
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 2px solid rgba(74, 144, 226, 0.3);
+    overflow-y: auto;
+    min-height: 80px; /* Minimum height for description */
+}
+
+.location-description-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments for character components - COMPACT DIMENSIONS */
+@media (max-width: 1200px) {
+    .character-name, .location-name {
+        font-size: 20px;
+    }
+    
+    .character-image-container {
+        height: 300px; /* Slightly smaller for medium screens */
+    }
+    
+    .character-image-container.no-stats {
+        height: 370px;
+    }
+    
+    .location-image-container {
+        height: 290px;
+    }
+    
+    .character-stats-panel {
+        height: 70px; /* Even more compact stats panel */
+    }
+    
+    .character-stats-panel .stat-label {
+        font-size: 10px;
+        min-width: 40px;
+    }
+    
+    .character-stats-panel .stat-row {
+        height: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    #characterInfo {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        height: auto;
+        min-height: 400px;
+        max-height: 500px;
+        flex-direction: row; /* Horizontal layout on mobile */
+    }
+    
+    .character-component, .location-display {
+        flex-direction: row;
+        height: 400px; /* Fixed height for mobile */
+    }
+    
+    .character-header, .location-header {
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        width: 60px;
+        height: 100%;
+        padding: var(--spacing-sm);
+        border-right: 2px solid rgba(74, 144, 226, 0.3);
+        border-bottom: none;
+    }
+    
+    .character-name, .location-name {
+        font-size: 18px;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        white-space: normal;
+    }
+    
+    .character-display {
+        flex-direction: row;
+        flex: 1;
+        padding: var(--spacing-xs);
+    }
+    
+    .character-image-container {
+        width: 180px;
+        height: 100%;
+        flex-shrink: 0;
+    }
+    
+    .character-image-container.no-stats {
+        width: 100%;
+    }
+    
+    .location-image-container {
+        width: 200px;
+        height: 100%;
+        flex-shrink: 0;
+    }
+    
+    .character-stats-panel {
+        width: 120px;
+        height: 100%;
+        margin-left: var(--spacing-xs);
+        padding: 4px;
+    }
+    
+    .character-stats-panel .stats-content {
+        gap: 4px;
+    }
+    
+    .character-stats-panel .stat-row {
+        height: 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1px;
+    }
+    
+    .character-stats-panel .stat-label {
+        font-size: 9px;
+        min-width: auto;
+    }
+    
+    .character-stats-panel .stat-text-value {
+        font-size: 10px;
+    }
+    
+    .location-description {
+        flex: 1;
+        min-height: auto;
+        height: 100%;
+        overflow-y: auto;
+        padding: var(--spacing-sm);
+    }
+    
+    .location-description-text {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    #characterInfo {
+        min-height: 350px;
+        max-height: 400px;
+    }
+    
+    .character-component, .location-display {
+        height: 350px;
+    }
+    
+    .character-name, .location-name {
+        font-size: 16px;
+    }
+    
+    .character-image-container {
+        width: 150px;
+    }
+    
+    .location-image-container {
+        width: 160px;
+    }
+    
+    .character-stats-panel {
+        width: 120px;
+    }
+    
+    .character-stats-panel .stat-label {
+        font-size: 9px;
+    }
+    
+    .character-stats-panel .stat-text-value {
+        font-size: 10px;
+    }
+    
+    .location-description-text {
+        font-size: 10px;
+    }
+}
+
+/* ========== END CHARACTER COMPONENT SYSTEM ========== */
 
 /* ========== REDESIGNED CHARACTER & MONSTER SYSTEM ========== */
 /* ========== MONSTER STATS - IN DIALOGUE AREA ========== */

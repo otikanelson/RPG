@@ -269,7 +269,7 @@
                     
                     <div class="toggle-button-container">
                         <button class="toggle-stats-equipment" onclick="toggleStatsEquipment()" id="toggleBtn">
-                            <img src="Assets/gem.png" alt="Stats" class="toggle-icon">
+                            <img src="Assets/backpack.png" alt="Stats" class="toggle-icon">
                         </button>
                     </div>
                     
@@ -277,8 +277,8 @@
                         <!-- Equipment Box -->
                         <div class="equipped" id="equippedContainer" style="display: flex;">
                             <span id="equippedText">Equipped Weapon</span>
-                            <div class="equippedBox" id="equippedBox">
-                                <span class="equipped-placeholder">Click to view</span>
+                            <div class="equippedBox clickable-equipment" id="equippedBox" title="Click to open equipment modal">
+                                <span class="equipped-placeholder">Click to view equipment</span>
                             </div>
                         </div>
                         
@@ -321,7 +321,7 @@
                 <div id="equipmentModal" class="equipment-modal">
                     <div class="equipment-modal-content">
                         <div class="equipment-modal-header">
-                            <h2>Equipment</h2>
+                            <h2>Equipment & Inventory</h2>
                             <button class="equipment-modal-close" onclick="closeEquipmentModal()">
                                 <ion-icon name="close"></ion-icon>
                             </button>
@@ -330,11 +330,13 @@
                         <div class="equipment-modal-body">
                             <!-- Inventory Section -->
                             <div class="equipment-section-container">
-                                <h3 class="equipment-section-title">Inventory</h3>
+                                <h3 class="equipment-section-title">
+                                    <span>📦</span> Inventory
+                                </h3>
                                 
                                 <!-- Weapons Subsection -->
                                 <div class="equipment-subsection">
-                                    <h4 class="equipment-subsection-title">Weapons</h4>
+                                    <h4 class="equipment-subsection-title">⚔️ Weapons</h4>
                                     <div class="equipment-drop-zone" id="inventoryWeaponsZone">
                                         <div class="equipment-grid" id="weaponsGrid">
                                             <!-- Weapons will be populated by JavaScript -->
@@ -342,12 +344,22 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Potions Subsection -->
+                                <!-- Armor Subsection -->
                                 <div class="equipment-subsection">
-                                    <h4 class="equipment-subsection-title">Potions</h4>
-                                    <div class="equipment-drop-zone" id="inventoryPotionsZone">
-                                        <div class="equipment-grid" id="potionsGrid">
-                                            <!-- Potions will be populated by JavaScript -->
+                                    <h4 class="equipment-subsection-title">🛡️ Armor</h4>
+                                    <div class="equipment-drop-zone" id="inventoryArmorZone">
+                                        <div class="equipment-grid" id="armorGrid">
+                                            <!-- Armor will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Consumables Subsection -->
+                                <div class="equipment-subsection">
+                                    <h4 class="equipment-subsection-title">🧪 Consumables</h4>
+                                    <div class="equipment-drop-zone" id="inventoryConsumablesZone">
+                                        <div class="equipment-grid" id="consumablesGrid">
+                                            <!-- Consumables will be populated by JavaScript -->
                                         </div>
                                     </div>
                                 </div>
@@ -355,21 +367,31 @@
                             
                             <!-- Equipped Section -->
                             <div class="equipment-section-container">
-                                <h3 class="equipment-section-title">Equipped</h3>
+                                <h3 class="equipment-section-title">
+                                    <span>⚡</span> Equipped
+                                </h3>
                                 
-                                <!-- Equipped Weapons -->
+                                <!-- Equipped Weapon -->
                                 <div class="equipment-subsection">
-                                    <h4 class="equipment-subsection-title">Weapon</h4>
+                                    <h4 class="equipment-subsection-title">Primary Weapon</h4>
                                     <div class="equipment-drop-zone equipped-zone" id="equippedWeaponZone">
                                         <!-- Equipped weapon will be populated by JavaScript -->
                                     </div>
                                 </div>
                                 
-                                <!-- Equipped Potions -->
+                                <!-- Equipped Armor -->
                                 <div class="equipment-subsection">
-                                    <h4 class="equipment-subsection-title">Potion</h4>
-                                    <div class="equipment-drop-zone equipped-zone" id="equippedPotionZone">
-                                        <!-- Equipped potion will be populated by JavaScript -->
+                                    <h4 class="equipment-subsection-title">Armor Slots</h4>
+                                    <div class="equipment-drop-zone equipped-zone" id="equippedArmorZone">
+                                        <!-- Equipped armor will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                                
+                                <!-- Equipped Consumable -->
+                                <div class="equipment-subsection">
+                                    <h4 class="equipment-subsection-title">Quick Use</h4>
+                                    <div class="equipment-drop-zone equipped-zone" id="equippedConsumableZone">
+                                        <!-- Equipped consumable will be populated by JavaScript -->
                                     </div>
                                 </div>
                             </div>
@@ -386,6 +408,7 @@
     <script type="module" src="core/GameStorage.js"></script>
     <script type="module" src="core/GameSettings.js"></script>
     <script type="module" src="ui/TextDesignManager.js"></script>
+    <script type="module" src="ui/CharacterComponent.js"></script>
     <script type="module" src="managers/ProgressManager.js"></script>
     <script type="module" src="managers/DialogueManager.js"></script>
     <script type="module" src="systems/BattleDialogue.js"></script>
@@ -396,27 +419,80 @@
     <script type="module" src="ui/GameTransitions.js"></script>
     <script type="module" src="ui/EquipmentModal.js"></script>
     
-    <!-- Initialize Equipment Modal -->
+    <!-- Initialize Equipment Modal - Simple Approach -->
     <script type="module">
         import EquipmentModal from './ui/EquipmentModal.js';
         
-        // Wait for gameLogic to be available
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('=== DOM Content Loaded ===');
-            
-            const initEquipmentModal = () => {
-                if (window.gameLogic) {
-                    window.equipmentModal = new EquipmentModal(window.gameLogic);
-                    console.log('Equipment modal initialized');
-                } else {
-                    setTimeout(initEquipmentModal, 100);
+        // Simple initialization function
+        function initEquipmentModal() {
+            if (window.gameLogic && !window.equipmentModalInstance) {
+                try {
+                    window.equipmentModalInstance = new EquipmentModal(window.gameLogic);
+                    console.log('✓ Equipment Modal initialized');
+                } catch (error) {
+                    console.error('✗ Failed to initialize Equipment Modal:', error);
                 }
-            };
-            initEquipmentModal();
-        });
+            }
+        }
+        
+        // Try multiple times to ensure initialization
+        window.addEventListener('DOMContentLoaded', initEquipmentModal);
+        setTimeout(initEquipmentModal, 100);
+        setTimeout(initEquipmentModal, 500);
+        setTimeout(initEquipmentModal, 1000);
     </script>
 
-    <!-- Equipped box toggle -->
+    <!-- Equipment Button Handlers -->
+    <script>
+    // Simple global function to open equipment modal
+    window.openEquipmentModal = function(reason = 'manual') {
+        if (window.equipmentModalInstance && typeof window.equipmentModalInstance.open === 'function') {
+            window.equipmentModalInstance.open(reason);
+        } else {
+            console.error('Equipment modal not ready. Retrying...');
+            // Try to initialize and open
+            setTimeout(() => {
+                if (window.equipmentModalInstance) {
+                    window.equipmentModalInstance.open(reason);
+                }
+            }, 100);
+        }
+    };
+    
+    // Function to close equipment modal
+    window.closeEquipmentModal = function() {
+        if (window.equipmentModalInstance && typeof window.equipmentModalInstance.close === 'function') {
+            window.equipmentModalInstance.close();
+        }
+    };
+    
+    // Setup equipment box click handler
+    document.addEventListener('DOMContentLoaded', function() {
+        const equippedBox = document.getElementById('equippedBox');
+        if (equippedBox) {
+            equippedBox.style.cursor = 'pointer';
+            equippedBox.style.transition = 'transform 0.2s ease';
+            
+            equippedBox.addEventListener('mouseenter', () => {
+                equippedBox.style.transform = 'scale(1.05)';
+            });
+            
+            equippedBox.addEventListener('mouseleave', () => {
+                equippedBox.style.transform = 'scale(1)';
+            });
+            
+            equippedBox.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.openEquipmentModal();
+            });
+            
+            console.log('✓ Equipment box click handler added');
+        }
+    });
+    </script>
+
+    <!-- Stats/Equipment Toggle Function -->
     <script>
     function toggleStatsEquipment() {
         const equippedContainer = document.getElementById('equippedContainer');
@@ -426,13 +502,11 @@
         if (equippedContainer.style.display === 'none') {
             equippedContainer.style.display = 'flex';
             playerStatsContainer.style.display = 'none';
-            // Show equipment icon
             toggleBtn.innerHTML = '<img src="Assets/backpack.png" alt="Equipment" class="toggle-icon">';
         } else {
             equippedContainer.style.display = 'none';
             playerStatsContainer.style.display = 'block';
             updatePlayerStatsDisplay();
-            // Show stats icon
             toggleBtn.innerHTML = '<img src="Assets/gem.png" alt="Stats" class="toggle-icon">';
         }
     }
@@ -441,51 +515,22 @@
         if (!window.gameLogic || !window.gameLogic.stats) return;
         
         const stats = window.gameLogic.stats;
-        const health = stats.health;
-        const maxHealth = stats.maxHealth;
-        const level = stats.level;
-        const xp = stats.xp;
-        const gold = stats.gold;
-        
-        // Update level bar based on XP progress (assuming 100 XP per level)
         const xpPerLevel = 100;
-        const xpInCurrentLevel = xp % xpPerLevel;
+        const xpInCurrentLevel = stats.xp % xpPerLevel;
         const levelPercent = (xpInCurrentLevel / xpPerLevel) * 100;
+        
         const levelBarFill = document.getElementById('levelBarFill');
-        if (levelBarFill) {
-            levelBarFill.style.width = levelPercent + '%';
-        }
+        if (levelBarFill) levelBarFill.style.width = levelPercent + '%';
         
-        // Health bar is always 100% width - no need to update width
-        // Just update the health value display
-        
-        // Update values
         const levelValue = document.getElementById('levelValue');
-        if (levelValue) {
-            levelValue.textContent = level;
-        }
+        if (levelValue) levelValue.textContent = stats.level;
         
         const healthValue = document.getElementById('healthValue');
-        if (healthValue) {
-            healthValue.textContent = health;
-        }
+        if (healthValue) healthValue.textContent = stats.health;
         
         const goldValue = document.getElementById('goldValue');
-        if (goldValue) {
-            goldValue.textContent = gold;
-        }
+        if (goldValue) goldValue.textContent = stats.gold;
     }
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        const equippedBox = document.getElementById('equippedBox');
-        if (equippedBox) {
-            equippedBox.addEventListener('click', function() {
-                if (window.equipmentModal) {
-                    window.equipmentModal.open();
-                }
-            });
-        }
-    });
     </script>
 
     <script type="module">

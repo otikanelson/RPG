@@ -309,11 +309,22 @@ class BattleManager {
             }
         }
         
-        // Show weapon/potion/stance selection
+        // INTEGRATION: Open equipment modal before battle preparation
         try {
+            console.log("Opening equipment modal for battle preparation...");
+            
+            // Check if equipment modal exists and open it
+            if (window.equipmentModalInstance) {
+                await window.equipmentModalInstance.openForBattle('battle');
+                console.log("Equipment modal closed, continuing with battle preparation");
+            } else {
+                console.warn("Equipment modal not found, skipping equipment preparation");
+            }
+            
+            // Show weapon/potion/stance selection
             return this.battlePrepManager.show();
         } catch (error) {
-            console.error("Error showing battle preparation:", error);
+            console.error("Error in battle preparation:", error);
             this.battleState = BATTLE_STATE.NOT_STARTED;
             if (this.textManager) {
                 await this.textManager.typeText("Failed to prepare for battle. Try again.");
