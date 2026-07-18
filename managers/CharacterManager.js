@@ -97,7 +97,7 @@ class CharacterManager {
             },
             "V'ial Imdall": {
                 name: "V'ial Imdall",
-                image: "Assets/V'ial imdall.jpg",
+                image: "Assets/V'ial Imdall.jpg",
                 description: "A powerful archmage and guardian of the realm. V'ial Imdall bears the weight of countless centuries, his weathered face marked by the wisdom of ages. His robes, adorned with intricate runes, pulse with barely contained magical energy. Despite his formidable presence, a hint of weariness shows in his ancient eyes, suggesting the burden of knowledge too heavy for most to bear.",
                 level: "Legendary",
                 bio: "A powerful mage tasked with maintaining peace in the realm."
