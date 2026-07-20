@@ -325,3 +325,200 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Core Game Scripts -->
+    <script type="module" src="../systems/GameAudio.js"></script>
+    <script type="module" src="../core/GameLogic.js"></script>
+    <script type="module" src="../core/GameStorage.js"></script>
+    <script type="module" src="../core/GameSettings.js"></script>
+    <script type="module" src="../ui/TextDesignManager.js"></script>
+    <script type="module" src="../ui/CharacterComponent.js"></script>
+    <script type="module" src="../systems/BattleDialogue.js"></script>
+    <script type="module" src="../systems/BattleCalculations.js"></script>
+    <script type="module" src="../systems/BattleActions.js"></script>
+    <script type="module" src="../systems/BattlePreparation.js"></script>
+    <script type="module" src="../systems/BattleLogic.js"></script>
+    <script type="module" src="../systems/DialogueEngine.js"></script>
+    <script type="module" src="../ui/EquipmentModal.js"></script>
+    <script type="module" src="../managers/CharacterManager.js"></script>
+    <script type="module" src="../managers/ShopManager.js"></script>
+    <script type="module" src="../ui/ShopModal.js"></script>
+
+    <!-- Map Manager -->
+    <script type="module">
+        import '../systems/MapManager.js';
+    </script>
+
+    <!-- Equipment Modal Initialization -->
+    <script type="module">
+        import EquipmentModal from '../ui/EquipmentModal.js';
+
+        function initEquipmentModal() {
+            if (window.gameLogic && !window.equipmentModalInstance) {
+                try {
+                    window.equipmentModalInstance = new EquipmentModal(window.gameLogic);
+                    console.log('✓ Equipment Modal initialized');
+                } catch (error) {
+                    console.error('✗ Failed to initialize Equipment Modal:', error);
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initEquipmentModal);
+        setTimeout(initEquipmentModal, 100);
+        setTimeout(initEquipmentModal, 500);
+        setTimeout(initEquipmentModal, 1000);
+    </script>
+
+    <!-- Equipment Button Handlers -->
+    <script>
+        window.openEquipmentModal = function (reason = 'manual') {
+            if (window.equipmentModalInstance && typeof window.equipmentModalInstance.open === 'function') {
+                window.equipmentModalInstance.open(reason);
+            } else {
+                console.error('Equipment modal not ready. Retrying...');
+                setTimeout(() => {
+                    if (window.equipmentModalInstance) {
+                        window.equipmentModalInstance.open(reason);
+                    }
+                }, 100);
+            }
+        };
+
+        window.closeEquipmentModal = function () {
+            if (window.equipmentModalInstance && typeof window.equipmentModalInstance.close === 'function') {
+                window.equipmentModalInstance.close();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const equippedBox = document.getElementById('equippedBox');
+            if (equippedBox) {
+                equippedBox.style.cursor = 'pointer';
+                equippedBox.style.transition = 'transform 0.2s ease';
+
+                equippedBox.addEventListener('mouseenter', () => {
+                    equippedBox.style.transform = 'scale(1.05)';
+                });
+
+                equippedBox.addEventListener('mouseleave', () => {
+                    equippedBox.style.transform = 'scale(1)';
+                });
+
+                equippedBox.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.openEquipmentModal();
+                });
+
+                console.log('✓ Equipment box click handler added');
+            }
+        });
+    </script>
+
+    <!-- Stats/Equipment Toggle -->
+    <script>
+        function toggleStatsEquipment() {
+            const equippedContainer = document.getElementById('equippedContainer');
+            const playerStatsContainer = document.getElementById('playerStatsContainer');
+            const toggleBtn = document.getElementById('toggleBtn');
+
+            if (equippedContainer.style.display === 'none') {
+                equippedContainer.style.display = 'flex';
+                playerStatsContainer.style.display = 'none';
+                toggleBtn.innerHTML = '<img src="../Assets/Images/backpack.png" alt="Equipment" class="toggle-icon">';
+            } else {
+                equippedContainer.style.display = 'none';
+                playerStatsContainer.style.display = 'block';
+                updatePlayerStatsDisplay();
+                toggleBtn.innerHTML = '<img src="../Assets/Images/gem.png" alt="Stats" class="toggle-icon">';
+            }
+        }
+
+        function updatePlayerStatsDisplay() {
+            if (!window.gameLogic || !window.gameLogic.stats) return;
+
+            const stats = window.gameLogic.stats;
+            const xpPerLevel = 100;
+            const xpInCurrentLevel = stats.xp % xpPerLevel;
+            const levelPercent = (xpInCurrentLevel / xpPerLevel) * 100;
+
+            const levelBarFill = document.getElementById('levelBarFill');
+            if (levelBarFill) levelBarFill.style.width = levelPercent + '%';
+
+            const levelValue = document.getElementById('levelValue');
+            if (levelValue) levelValue.textContent = stats.level;
+
+            const healthValue = document.getElementById('healthValue');
+            if (healthValue) healthValue.textContent = stats.health;
+
+            const goldValue = document.getElementById('goldValue');
+            if (goldValue) goldValue.textContent = stats.gold;
+        }
+    </script>
+
+    <!-- Map Modal Controls -->
+    <script>
+        window.openMapModal = function () {
+            const modal = document.getElementById('mapModal');
+            if (modal) {
+                modal.classList.add('open');
+                import('../systems/MapManager.js').then(module => {
+                    module.default.drawConnectionLines();
+                });
+            }
+        };
+
+        window.closeMapModal = function () {
+            const modal = document.getElementById('mapModal');
+            if (modal) {
+                modal.classList.remove('open');
+            }
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.closeMapModal();
+            }
+        });
+    </script>
+
+    <!-- Character Description Toggle -->
+    <script>
+        function toggleCharacterDescription() {
+            const descr = document.getElementById('charDescription');
+            if (!descr) return;
+            descr.style.display = descr.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+
+    <!-- Game Initialization -->
+    <script type="module">
+        console.log('🎮 Starting game...');
+        
+        setTimeout(() => {
+            const gamePage = document.getElementById('gamePage');
+            if (gamePage) {
+                gamePage.style.display = 'block';
+                gamePage.classList.add('visible');
+                console.log('✓ Game page displayed');
+            }
+            
+            setTimeout(() => {
+                if (window.dialogueManager) {
+                    console.log('✓ Starting Intro dialogue');
+                    window.dialogueManager.startDialogue('Intro');
+                } else {
+                    console.warn('⚠ DialogueManager not found, retrying...');
+                    setTimeout(() => {
+                        if (window.dialogueManager) {
+                            window.dialogueManager.startDialogue('Intro');
+                        }
+                    }, 500);
+                }
+            }, 200);
+        }, 100);
+    </script>
+</body>
+</html>
