@@ -1,0 +1,554 @@
+/* ============================================
+   EQUIPMENT MODAL - Inventory management system
+   ============================================ */
+
+.equipment-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 2500;
+    animation: fadeIn 0.3s ease;
+}
+
+.equipment-modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Battle preparation mode styling */
+.equipment-modal.battle-prep-mode {
+    background: rgba(20, 10, 0, 0.95);
+}
+
+.equipment-modal.battle-prep-mode .equipment-modal-content {
+    border-color: rgba(139, 69, 19, 0.8);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 
+                0 0 40px rgba(212, 165, 116, 0.3);
+}
+
+.equipment-modal-content {
+    background: linear-gradient(135deg, #4a3728 0%, #3d2f1f 50%, #2a1f13 100%);
+    border: 4px solid #5c4033;
+    border-radius: 12px;
+    padding: 20px;
+    width: 90%;
+    max-width: 900px;
+    min-height: 350px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 
+                inset 0 2px 4px rgba(0, 0, 0, 0.4),
+                inset 0 -2px 4px rgba(92, 64, 51, 0.3);
+    animation: slideUp 0.4s ease;
+    position: relative;
+    scrollbar-width: none;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.05) 2px, rgba(0, 0, 0, 0.05) 4px),
+        repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.05) 2px, rgba(0, 0, 0, 0.05) 4px);
+}
+
+.equipment-modal-content::-webkit-scrollbar {
+    display: none;
+}
+
+.equipment-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(92, 64, 51, 0.6);
+}
+
+.equipment-modal-header h2 {
+    font-family: 'EnglishTowne', serif;
+    font-size: 26px;
+    color: #d4a574;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    margin: 0;
+}
+
+.battle-prep-mode .equipment-modal-header h2 {
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9), 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.equipment-modal-close {
+    background: rgba(101, 67, 33, 0.6);
+    border: 2px solid rgba(139, 111, 71, 0.8);
+    color: #f5deb3;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-weight: bold;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.equipment-modal-close:hover {
+    background: rgba(139, 69, 19, 0.8);
+    border-color: rgba(184, 134, 11, 0.9);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 0 12px rgba(184, 134, 11, 0.4);
+}
+
+.equipment-modal-close:active {
+    transform: scale(0.95);
+}
+
+.equipment-modal-close::before {
+    display: none;
+}
+
+.equipment-modal-close ion-icon {
+    font-size: 24px;
+    pointer-events: none;
+}
+
+.equipment-modal-body {
+    display: flex;
+    gap: var(--spacing-lg);
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.equipment-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.equipment-section-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    min-height: 0;
+}
+
+.equipment-section-title {
+    font-family: 'EnglishTowne', serif;
+    font-size: 16px;
+    color: #d4a574;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.equipment-section-title span {
+    font-size: 18px;
+}
+
+.equipment-section-title::before {
+    content: '';
+    width: 25px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #8b6f47);
+}
+
+.equipment-subsection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.equipment-subsection-title {
+    font-size: 13px;
+    color: #d4a574;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.equipment-subsection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.unequip-all-btn {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.5) 0%, rgba(101, 50, 12, 0.5) 100%);
+    border: 1px solid rgba(139, 111, 71, 0.6);
+    color: #f5deb3;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.unequip-all-btn:hover {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.7) 0%, rgba(101, 50, 12, 0.7) 100%);
+    border-color: rgba(139, 111, 71, 0.9);
+    box-shadow: 0 0 8px rgba(139, 111, 71, 0.3);
+    transform: translateY(-1px);
+}
+
+.unequip-all-btn:active {
+    transform: scale(0.95);
+}
+
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+}
+
+.equipment-drop-zone {
+    flex: 1;
+    border: 2px dashed rgba(139, 111, 71, 0.4);
+    border-radius: 8px;
+    padding: 10px;
+    background: rgba(26, 18, 10, 0.5);
+    min-height: 150px;
+    max-height: 250px;
+    overflow-y: auto;
+    transition: all var(--transition-normal);
+}
+
+.equipment-drop-zone::-webkit-scrollbar {
+    display: none;
+}
+
+.equipment-drop-zone.drag-over {
+    border-color: #d4a574;
+    background: rgba(212, 165, 116, 0.1);
+    box-shadow: inset 0 0 12px rgba(212, 165, 116, 0.3);
+}
+
+.equipped-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    min-height: 90px;
+}
+
+.equipped-zone .equipment-item {
+    width: 100%;
+    min-height: 85px;
+}
+
+#equippedArmorZone {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    min-height: auto;
+}
+
+#equippedArmorZone .equipment-armor-slot {
+    min-height: 90px;
+}
+
+.equipment-item {
+    background: linear-gradient(135deg, rgba(62, 46, 32, 0.7) 0%, rgba(42, 31, 19, 0.7) 100%);
+    border: 2px solid rgba(92, 64, 51, 0.5);
+    border-radius: 6px;
+    padding: 6px;
+    cursor: grab;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 70px;
+}
+
+.equipment-item:active {
+    cursor: grabbing;
+}
+
+.equipment-item:hover {
+    background: linear-gradient(135deg, rgba(82, 66, 52, 0.9) 0%, rgba(62, 51, 39, 0.9) 100%);
+    border-color: #8b6f47;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6),
+                0 0 15px rgba(212, 165, 116, 0.3);
+    z-index: 10;
+}
+
+.equipment-item.equipped {
+    border-color: #b8860b;
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.3) 0%, rgba(139, 101, 8, 0.3) 100%);
+}
+
+.equipment-item.equipped::after {
+    content: '✓';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #b8860b;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(184, 134, 11, 0.6);
+}
+
+.equipment-item-img {
+    width: 100%;
+    max-width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 4px;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
+    pointer-events: none;
+}
+
+.equipment-item-name {
+    font-size: 10px;
+    font-weight: bold;
+    color: #f5deb3;
+    text-align: center;
+    margin-bottom: 2px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+    line-height: 1.1;
+}
+
+.equipment-item-stats {
+    font-size: 9px;
+    color: rgba(245, 222, 179, 0.8);
+    text-align: center;
+    line-height: 1.2;
+}
+
+.equipment-item-damage {
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+.equipment-item-defense {
+    color: #8b6f47;
+    font-weight: bold;
+}
+
+.equipment-item-type {
+    color: rgba(245, 222, 179, 0.6);
+    text-transform: capitalize;
+    font-size: 8px;
+    margin-top: 2px;
+}
+
+.equipment-item-cost {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.equipment-empty {
+    text-align: center;
+    padding: var(--spacing-lg);
+    color: rgba(245, 222, 179, 0.5);
+    font-style: italic;
+    font-size: 11px;
+}
+
+.armor-slot-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 85px;
+    border: 2px dashed rgba(139, 111, 71, 0.4);
+    border-radius: 6px;
+    background: rgba(26, 18, 10, 0.5);
+    padding: 8px;
+}
+
+.armor-slot-label {
+    font-weight: bold;
+    color: #d4a574;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    font-size: 9px;
+    text-align: center;
+}
+
+.equipment-armor-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0;
+    border-radius: 6px;
+    background: transparent;
+}
+
+.equipment-armor-slot .equipment-item {
+    min-height: 85px;
+}
+
+.equipment-unequip-btn {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.6) 0%, rgba(101, 50, 12, 0.6) 100%);
+    border: 2px solid rgba(139, 111, 71, 0.5);
+    color: #f5deb3;
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+    width: 100%;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.equipment-unequip-btn:hover {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.8) 0%, rgba(101, 50, 12, 0.8) 100%);
+    border-color: rgba(139, 111, 71, 0.8);
+    box-shadow: 0 0 10px rgba(139, 111, 71, 0.4);
+    transform: translateY(-1px);
+}
+
+.equipment-unequip-btn:active {
+    transform: scale(0.98);
+}
+
+/* Battle Ready Footer */
+.battle-ready-footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    border-top: 2px solid rgba(139, 111, 71, 0.5);
+    background: rgba(139, 69, 19, 0.15);
+    border-radius: 8px;
+}
+
+.battle-prep-message {
+    text-align: center;
+    color: rgba(245, 222, 179, 0.9);
+    font-size: 13px;
+}
+
+.battle-prep-message strong {
+    color: #ffd700;
+}
+
+.battle-ready-btn {
+    background: linear-gradient(135deg, #b8860b 0%, #8b6914 100%);
+    border: 2px solid rgba(184, 134, 11, 0.8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+    align-self: center;
+    min-width: 200px;
+    animation: battlePulse 2s ease-in-out infinite;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+@keyframes battlePulse {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(184, 134, 11, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        transform: scale(1.02);
+    }
+}
+
+.battle-ready-btn:hover {
+    background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+    border-color: rgba(218, 165, 32, 1);
+    transform: scale(1.05);
+    animation: none;
+}
+
+.battle-ready-btn:active {
+    transform: scale(0.98);
+}
+
+/* Enhanced Equipment Box Styling */
+.equippedBox {
+    position: relative;
+    overflow: visible !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid rgba(92, 64, 51, 0.6) !important;
+    background: linear-gradient(135deg, rgba(62, 46, 32, 0.9) 0%, rgba(42, 31, 19, 0.9) 100%) !important;
+    border-radius: 8px;
+    padding: 12px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.clickable-equipment {
+    position: relative;
+    overflow: visible !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid rgba(92, 64, 51, 0.6) !important;
+    background: linear-gradient(135deg, rgba(62, 46, 32, 0.9) 0%, rgba(42, 31, 19, 0.9) 100%) !important;
+}
+
+.equippedBox:hover, .clickable-equipment:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.4) !important;
+    border-color: rgba(139, 111, 71, 0.9) !important;
+}
+
+.equippedBox:active, .clickable-equipment:active {
+    transform: scale(0.98) !important;
+}
+
+.equipped-placeholder {
+    font-size: 12px !important;
+    color: rgba(245, 222, 179, 0.8) !important;
+    text-align: center !important;
+    pointer-events: none;
+}
+
+.equipped-weapon-img {
+    max-width: 40px;
+    max-height: 30px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.7));
+}
+
+.equipped-weapon-name {
+    font-size: 10px;
+    color: #f5deb3;
+    text-align: center;
+    margin-top: 4px;
+    pointer-events: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.O.T.A - Loading</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../Assets/Images/Витая Бездна.jpg">
+</head>
+<body>
+    <!-- Eerie Splash Screen -->
+    <div id="splashScreen">
+        <div class="splash-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="splash-content">
+            <h1 class="splash-title">Shadow of the Arcane</h1>
+            <p class="splash-message">The darkness awaits...</p>
+            <p class="splash-instruction">
+                For the best experience, please zoom out your browser<br>
+                (Press Ctrl + - or Cmd + - until the layout fits comfortably)
+            </p>
+            <button class="splash-continue" onclick="dismissSplash()">Enter the Realm</button>
+        </div>
+    </div>
+
+    <!-- Splash Screen Scripts -->
+    <script>
+        function dismissSplash() {
+            const splash = document.getElementById('splashScreen');
+            
+            splash.classList.add('hidden');
+
+            setTimeout(() => {
+                // Redirect to start page
+                window.location.href = 'start.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

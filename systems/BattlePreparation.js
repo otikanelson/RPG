@@ -2,6 +2,7 @@
  * BattlePreparation.js (Cleaned)
  * Battle Preparation Manager - handles weapon/potion/stance selection
  */
+import { getImagePath, VISUAL_ASSETS } from './VisualAssets.js';
 
 class BattlePreparationManager {
     constructor(gameLogic, battleManager) {
@@ -289,8 +290,11 @@ class BattlePreparationManager {
             card.classList.add('equipped');
         }
 
-        // Get weapon stats
-        const weaponObj = this.gameLogic.weapons[weapon] || { damage: '?', image: 'Assets/unknown.png' };
+        // Get weapon stats using centralized visual assets
+        const weaponObj = this.gameLogic.weapons[weapon] || { 
+            damage: '?', 
+            image: getImagePath('MISC', 'DEFAULT_ICON')
+        };
 
         card.innerHTML = `
             <h3>${weapon}</h3>
@@ -320,7 +324,7 @@ class BattlePreparationManager {
         card.innerHTML = `
             <h3>Health Potion</h3>
             <div class="potion-image">
-                <img src="Assets/health-potion.png" alt="Health Potion" style="max-width: 100%; height: 60px; object-fit: contain;">
+                <img src="${getImagePath('CONSUMABLES', 'HEALTH_POTION')}" alt="Health Potion" style="max-width: 100%; height: 60px; object-fit: contain;">
             </div>
             <p>Restores 10 HP</p>
         `;

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Debug</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Debug outlines */
+        #Game {
+            outline: 3px solid red !important;
+        }
+        #characterInfo {
+            outline: 3px solid blue !important;
+        }
+        .storySection {
+            outline: 3px solid green !important;
+        }
+        .storyNar {
+            outline: 3px solid orange !important;
+        }
+        .storyFunctions {
+            outline: 3px solid purple !important;
+        }
+        .dialogue {
+            outline: 3px solid cyan !important;
+        }
+        .dialogueBtns {
+            outline: 3px solid yellow !important;
+        }
+        
+        /* Debug info overlay */
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 10000;
+            max-width: 300px;
+        }
+        .debug-info div {
+            margin: 5px 0;
+        }
+        .debug-label {
+            color: #4a90e2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info" id="debugInfo">
+        <div><span class="debug-label">Window:</span> <span id="windowSize"></span></div>
+        <div><span class="debug-label">#Game:</span> <span id="gameSize"></span></div>
+        <div><span class="debug-label">#characterInfo:</span> <span id="charSize"></span></div>
+        <div><span class="debug-label">.storySection:</span> <span id="storySize"></span></div>
+        <div><span class="debug-label">.storyNar:</span> <span id="narSize"></span></div>
+        <div><span class="debug-label">.storyFunctions:</span> <span id="funcSize"></span></div>
+        <div><span class="debug-label">.dialogue:</span> <span id="dialogueSize"></span></div>
+    </div>
+
+    <div id="gamePage">
+        <nav class="navBar" style="background: #1a1a2e; padding: 10px; text-align: center; color: white;">
+            <h2>Layout Debug Mode</h2>
+        </nav>
+
+        <div id="Game">
+            <!-- LEFT SIDE: Character Info -->
+            <div id="characterInfo">
+                <div class="char">
+                    <p class="charName">Eliza</p>
+                </div>
+                <div class="character-display">
+                    <div id="Info">
+                        <img class="CharImg" src="Assets/Images/Eliza.png" alt="Eliza">
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER/RIGHT: Story Section -->
+            <div class="storySection">
+                <div class="storyNar">
+                    <div class="text">
+                        <div id="text">This is the story narration area. It should take up most of the vertical space.</div>
+                    </div>
+                </div>
+
+                <div class="storyFunctions">
+                    <div class="dialogue">
+                        <div class="dialogueBtns">
+                            <button>Option 1</button>
+                            <button>Option 2</button>
+                            <button>Option 3</button>
+                        </div>
+                    </div>
+
+                    <div class="toggle-button-container">
+                        <button class="toggle-stats-equipment">
+                            <img src="Assets/Images/backpack.png" alt="Toggle" class="toggle-icon">
+                        </button>
+                    </div>
+
+                    <div class="equipped-stats-container">
+                        <div class="equipped">
+                            <span id="equippedText">Equipped Weapon</span>
+                            <div class="equippedBox">
+                                <span class="equipped-placeholder">Click to view equipment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateDebugInfo() {
+            const game = document.getElementById('Game');
+            const char = document.getElementById('characterInfo');
+            const story = document.querySelector('.storySection');
+            const nar = document.querySelector('.storyNar');
+            const func = document.querySelector('.storyFunctions');
+            const dialogue = document.querySelector('.dialogue');
+
+            document.getElementById('windowSize').textContent = `${window.innerWidth} x ${window.innerHeight}`;
+            
+            if (game) {
+                const rect = game.getBoundingClientRect();
+                document.getElementById('gameSize').textContent = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
+            }
+            
+            if (char) {
+                const rect = char.getBoundingClientRect();
+                document.getElementById('charSize').textContent = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
+            }
+            
+            if (story) {
+                const rect = story.getBoundingClientRect();
+                document.getElementById('storySize').textContent = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
+            }
+            
+            if (nar) {
+                const rect = nar.getBoundingClientRect();
+                document.getElementById('narSize').textContent = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
+            }
+            
+            if (func) {
+                const rect = func.getBoundingClientRect();
+                document.getElementById('funcSize').textContent = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
+            }
+            
+            if (dialogue) {
+                const rect = dialogue.getBoundingClientRect();
+                document.getElementById('dialogueSize').textContent = `${Math.round(rect.width)} x ${Math.round(rect.height)}`;
+            }
+        }
+
+        // Update on load and resize
+        window.addEventListener('load', updateDebugInfo);
+        window.addEventListener('resize', updateDebugInfo);
+        
+        // Update every second to catch any changes
+        setInterval(updateDebugInfo, 1000);
+    </script>
+</body>
+</html>

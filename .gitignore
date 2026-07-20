@@ -1,9 +1,9 @@
 # Large video files - use external hosting or CDN
-Assets/Battle music.mp4
-Assets/Battle music_2.mp4
-Assets/Battle music_3.mp4
-Assets/Dice Number 4.mp4
-Assets/mylivewallpapers-com-Night-Dragon-4K.mp4
+Assets/Audio/AudioBattle music.mp4
+Assets/Audio/AudioBattle music_2.mp4
+Assets/Audio/AudioBattle music_3.mp4
+Assets/Audio/AudioDice Number 4.mp4
+Assets/Audio/Audiomylivewallpapers-com-Night-Dragon-4K.mp4
 
 # Node modules
 node_modules/

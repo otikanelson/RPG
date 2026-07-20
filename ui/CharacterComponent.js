@@ -2,6 +2,7 @@
  * CharacterComponent.js - Individual Character Component with Stats
  * Creates reusable character display components with stats
  */
+import { getImagePath, VISUAL_ASSETS } from '../systems/VisualAssets.js';
 
 class CharacterComponent {
     constructor(characterData, gameLogic, battleManager) {
@@ -137,7 +138,7 @@ class CharacterComponent {
             <div class="stat-row gold-row">
                 <span class="stat-label">Gold:</span>
                 <div class="gold-display">
-                    <img src="Assets/goldImg.png" alt="Gold" class="gold-icon">
+                    <img src="${getImagePath('UI', 'GOLD_ICON')}" alt="Gold" class="gold-icon">
                     <span class="stat-value gold-value" data-value="gold">50</span>
                 </div>
             </div>

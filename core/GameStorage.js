@@ -1,3 +1,8 @@
+/**
+ * src/core/GameStorage.js
+ * Clean, production-ready Save/Load engine.
+ */
+
 class GameStorage {
     constructor() {
         this.saveButton = document.querySelector('.savebtn');
@@ -16,7 +21,6 @@ class GameStorage {
     }
 
     saveGame() {
-        // Get current game state from GameLogic
         const gameLogic = window.gameLogic || this.getGameLogicInstance();
         if (!gameLogic) {
             this.showNotification('Game logic not available', true);
@@ -30,8 +34,7 @@ class GameStorage {
                 gold: gameLogic.stats.gold,
                 xp: gameLogic.stats.xp,
                 level: gameLogic.stats.level,
-                inventory: gameLogic.inventory,
-                weapons: gameLogic.weapons
+                inventory: { ...gameLogic.inventory }
             },
             progress: {
                 choiceSequences: this.choiceSequences,
@@ -68,22 +71,32 @@ class GameStorage {
                 return;
             }
             
-            // Restore player state
-            gameLogic.stats.health = gameState.player.health;
-            gameLogic.stats.maxHealth = gameState.player.maxHealth;
-            gameLogic.stats.gold = gameState.player.gold;
-            gameLogic.stats.xp = gameState.player.xp;
-            gameLogic.stats.level = gameState.player.level;
-            gameLogic.inventory = gameState.player.inventory;
-            gameLogic.weapons = gameState.player.weapons;
+            // Restore structural player state definitions cleanly
+            gameLogic.stats = {
+                health: gameState.player.health,
+                maxHealth: gameState.player.maxHealth,
+                gold: gameState.player.gold,
+                xp: gameState.player.xp,
+                level: gameState.player.level
+            };
+            
+            gameLogic.inventory = { ...gameState.player.inventory };
 
-            // Restore progress
+            // Restore progression milestones
             this.choiceSequences = gameState.progress.choiceSequences || [];
             this.visitedLocations = new Set(gameState.progress.visitedLocations || []);
             this.achievements = gameState.progress.achievements || [];
             this.unlockedCharacters = new Map(gameState.progress.characters || []);
 
-            // Update UI
+            // --- DATA INTEGRITY REGISTRY FAILSAFES ---
+            if (!gameLogic.inventory.weapons || gameLogic.inventory.weapons.length === 0) {
+                console.warn("Failsafe: Clean profile required. Injecting starter blade.");
+                gameLogic.inventory.weapons = ['rusty_knife'];
+            }
+            if (!gameLogic.inventory.weapons.includes(gameLogic.inventory.equippedWeapon)) {
+                gameLogic.inventory.equippedWeapon = gameLogic.inventory.weapons[0];
+            }
+
             gameLogic.updateUI();
             this.showNotification('Game loaded successfully!');
         } catch (error) {
@@ -93,14 +106,11 @@ class GameStorage {
     }
 
     getGameLogicInstance() {
-        // Try to find gameLogic instance
         if (typeof gameLogic !== 'undefined') {
             return gameLogic;
         }
-        
-        // Try to import it
         try {
-            return import('../core/GameLogic.js').then(module => module.default);
+            return import('./GameLogic.js').then(module => module.default);
         } catch (error) {
             console.error('Could not find GameLogic instance:', error);
             return null;
@@ -127,7 +137,6 @@ class GameStorage {
         setTimeout(() => notification.remove(), 3000);
     }
 
-    // Achievement management
     loadAchievements() {
         try {
             return JSON.parse(localStorage.getItem('rpgAchievements') || '[]');
@@ -148,49 +157,21 @@ class GameStorage {
         }
     }
 
-    // Choice tracking for story branching
     addChoice(choice, context = {}) {
-        this.choiceSequences.push({
-            choice,
-            context,
-            timestamp: Date.now()
-        });
+        this.choiceSequences.push({ choice, context, timestamp: Date.now() });
     }
 
-    getChoiceHistory() {
-        return this.choiceSequences;
-    }
+    getChoiceHistory() { return this.choiceSequences; }
+    addLocation(location) { this.visitedLocations.add(location); }
+    hasVisitedLocation(location) { return this.visitedLocations.has(location); }
+    getVisitedLocations() { return Array.from(this.visitedLocations); }
 
-    // Location tracking
-    addLocation(location) {
-        this.visitedLocations.add(location);
-    }
-
-    hasVisitedLocation(location) {
-        return this.visitedLocations.has(location);
-    }
-
-    getVisitedLocations() {
-        return Array.from(this.visitedLocations);
-    }
-
-    // Character management
     unlockCharacter(character) {
-        this.unlockedCharacters.set(character.id, {
-            ...character,
-            unlockedAt: Date.now()
-        });
+        this.unlockedCharacters.set(character.id, { ...character, unlockedAt: Date.now() });
     }
+    isCharacterUnlocked(characterId) { return this.unlockedCharacters.has(characterId); }
+    getUnlockedCharacters() { return Array.from(this.unlockedCharacters.values()); }
 
-    isCharacterUnlocked(characterId) {
-        return this.unlockedCharacters.has(characterId);
-    }
-
-    getUnlockedCharacters() {
-        return Array.from(this.unlockedCharacters.values());
-    }
-
-    // Clear all save data (for testing or reset)
     clearSaveData() {
         localStorage.removeItem('rpgGameState');
         localStorage.removeItem('rpgAchievements');
@@ -201,30 +182,22 @@ class GameStorage {
         this.showNotification('Save data cleared');
     }
 
-    // Check if save data exists
-    hasSaveData() {
-        return localStorage.getItem('rpgGameState') !== null;
-    }
+    hasSaveData() { return localStorage.getItem('rpgGameState') !== null; }
 }
 
-// Add CSS for notifications
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
     }
-    
     .notification {
         font-family: 'Arial', sans-serif;
         font-size: 14px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
     }
-    
-    .notification:hover {
-        transform: translateX(-5px);
-    }
+    .notification:hover { transform: translateX(-5px); }
 `;
 document.head.appendChild(style);
 

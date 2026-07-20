@@ -12,6 +12,7 @@ import CharacterManager from '../managers/CharacterManager.js';
 import BattleCalculations from './BattleCalculations.js';
 import BattleActions from './BattleActions.js';
 import BattlePreparationManager from './BattlePreparation.js';
+import gameAudio, { AUDIO_ASSETS } from './GameAudio.js';
 
 // Battle State Machine Constants
 const BATTLE_STATE = {
@@ -41,21 +42,8 @@ class BattleManager {
         this.monsterHealthBar = document.querySelector('.monsterHealthBar');
         this.diceElement = document.getElementById('dice');
          
-        // Initialize audio elements with error handling
-        this.battleSounds = {
-            dice: this.createAudioWithFallback('Assets/dice-roll.mp3'),
-            attack: this.createAudioWithFallback('Assets/attack-sound.mp3'),
-            defend: this.createAudioWithFallback('Assets/defend-sound.mp3'),
-            victory: this.createAudioWithFallback('Assets/victory-sound.mp3'),
-            defeat: this.createAudioWithFallback('Assets/defeat-sound.mp3')
-        };
-        
-        this.battleMusic = {
-            slimebeast: this.createAudioWithFallback('Assets/slime-battle.mp3'),
-            shardwarden: this.createAudioWithFallback('Assets/warden-battle.mp3'),
-            shadowbeast: this.createAudioWithFallback('Assets/shadow-battle.mp3'),
-            default: this.createAudioWithFallback('Assets/default-battle.mp3')
-        };
+        // Use centralized audio system instead of creating individual audio elements
+        this.gameAudio = gameAudio;
         
         // Monster definitions
         this.monsters = {
@@ -146,24 +134,11 @@ class BattleManager {
     }
 
     /**
-     * Create audio element with error handling
-     * @param {string} path - Path to audio file
-     * @returns {Audio} - Audio element or mock object
+     * Play battle sound effect using centralized audio system
+     * @param {string} soundKey - Key from AUDIO_ASSETS.SFX
      */
-    createAudioWithFallback(path) {
-        const audio = new Audio();
-        audio.src = path;
-        audio.addEventListener('error', () => {
-            console.warn(`Audio file not found: ${path}`);
-        });
-        // Add a mock play method that doesn't throw errors
-        const originalPlay = audio.play.bind(audio);
-        audio.play = () => {
-            return originalPlay().catch(e => {
-                // Silently handle play errors
-            });
-        };
-        return audio;
+    playSoundEffect(soundKey) {
+        this.gameAudio.playSFX(soundKey);
     }
 
     /**
@@ -245,11 +220,7 @@ class BattleManager {
         this.inBattle = false;
         
         // Stop any playing music
-        if (this.currentBattleMusic) {
-            this.currentBattleMusic.pause();
-            this.currentBattleMusic.currentTime = 0;
-            this.currentBattleMusic = null;
-        }
+        this.gameAudio.stopAll();
         
         // Hide monster stats UI
         if (this.monsterStats) {
@@ -291,9 +262,10 @@ class BattleManager {
             this.monsterStats.style.display = 'block';
         }
         
-        // Start battle music
+        // Start battle music using centralized audio system
         try {
-            this.playBattleMusic(monsterName.toLowerCase().replace(/\s+/g, ''));
+            const monsterKey = monsterName.toLowerCase().replace(/\s+/g, '');
+            this.gameAudio.playMusic(monsterKey);
         } catch (error) {
             console.warn("Failed to play battle music:", error);
         }
@@ -379,23 +351,11 @@ class BattleManager {
     }
     
     /**
-     * Play battle music for the monster
+     * Play battle music for the monster using centralized audio system
      * @param {string} monsterType - The type of monster (normalized)
      */
     playBattleMusic(monsterType) {
-        // Stop current battle music if playing
-        if (this.currentBattleMusic) {
-            this.currentBattleMusic.pause();
-            this.currentBattleMusic.currentTime = 0;
-        }
-        
-        // Choose the appropriate music
-        this.currentBattleMusic = this.battleMusic[monsterType] || this.battleMusic.default;
-        
-        // Configure and play
-        this.currentBattleMusic.loop = true;
-        this.currentBattleMusic.volume = 0.5;
-        this.currentBattleMusic.play().catch(e => console.warn('Battle music failed to play:', e));
+        this.gameAudio.playMusic(monsterType);
     }
     
     /**
@@ -551,8 +511,8 @@ class BattleManager {
             this.diceElement.style.opacity = '1';
             this.diceElement.play();
             
-            // Play dice sound
-            this.battleSounds.dice.play().catch(e => console.warn('Dice sound failed:', e));
+            // Play dice sound using centralized audio system
+            this.gameAudio.playSFX('dice');
         }
         
         // Wait for dice animation
@@ -681,7 +641,7 @@ class BattleManager {
             this.diceElement.style.opacity = '1';
             this.diceElement.play();
             
-            this.battleSounds.dice.play().catch(e => console.warn('Dice sound failed:', e));
+            this.gameAudio.playSFX('dice');
             
             setTimeout(() => {
                 this.diceElement.style.opacity = '0';
@@ -701,14 +661,11 @@ class BattleManager {
         this.battleState = BATTLE_STATE.VICTORY;
         this.inBattle = false; // Clear legacy flag
         
-        // Play victory sound
-        this.battleSounds.victory.play().catch(e => console.warn('Victory sound failed:', e));
+        // Play victory sound using centralized audio system
+        this.gameAudio.playSFX('victory');
         
         // Stop battle music
-        if (this.currentBattleMusic) {
-            this.currentBattleMusic.pause();
-            this.currentBattleMusic.currentTime = 0;
-        }
+        this.gameAudio.stopAll();
         
         // Calculate rewards based on difficulty
         const levelDifference = this.currentMonster.level - this.gameLogic.stats.level;
@@ -767,14 +724,11 @@ class BattleManager {
         this.battleState = BATTLE_STATE.DEFEAT;
         this.inBattle = false; // Clear legacy flag
         
-        // Play defeat sound
-        this.battleSounds.defeat.play().catch(e => console.warn('Defeat sound failed:', e));
+        // Play defeat sound using centralized audio system
+        this.gameAudio.playSFX('defeat');
         
         // Stop battle music
-        if (this.currentBattleMusic) {
-            this.currentBattleMusic.pause();
-            this.currentBattleMusic.currentTime = 0;
-        }
+        this.gameAudio.stopAll();
         
         // Hide monster stats UI
         if (this.monsterStats) {

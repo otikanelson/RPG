@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.O.T.A - Main Menu</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="../Assets/Images/Витая Бездна.jpg">
+    <script type="module" src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <!-- Start Page -->
+    <div id="startPage" class="visible">
+        <!-- Navigation Bar -->
+        <nav class="NavBar">
+            <ul>
+                <li><a href="#" id="openSettings">Settings</a></li>
+                <li><a href="#" id="title">Shadow of the Arcane</a></li>
+                <li><a href="#" id="openAbout">About</a></li>
+            </ul>
+        </nav>
+
+        <!-- Sidebar Overlay -->
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+        <!-- Settings Sidebar -->
+        <aside id="settingsSidebar" class="nav-sidebar nav-sidebar--left">
+            <button class="sidebar-close" aria-label="Close settings">
+                <ion-icon name="close"></ion-icon>
+            </button>
+            <h2>Settings</h2>
+            <div class="functions">
+                <h4>Music</h4>
+                <div class="music">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path
+                            d="M 19.6875 2 L 8.6875 3.5 C 7.6875 3.601563 7 4.5 7 5.5 L 7 15.78125 C 6.539063 15.699219 6.039063 15.699219 5.5 15.8125 C 3.601563 16.3125 2 17.988281 2 19.6875 C 2 21.386719 3.601563 22.40625 5.5 21.90625 C 7.398438 21.40625 9 19.699219 9 18 L 9 9.40625 L 20 7.9375 L 20 14.71875 C 19.539063 14.636719 19.039063 14.671875 18.5 14.8125 C 16.601563 15.3125 15 16.988281 15 18.6875 C 15 20.386719 16.601563 21.40625 18.5 20.90625 C 20.398438 20.40625 22 18.699219 22 17 L 22 4 C 22 2.800781 20.886719 1.898438 19.6875 2 Z">
+                        </path>
+                    </svg>
+                    <input type="range" min="0" max="1" step="0.01" value="0.5" class="music-slider">
+                </div>
+                <h4>Sound</h4>
+                <div class="sound">
+                    <img src="../Assets/Images/sound.png" alt="Sound">
+                    <input type="range" min="0" max="1" step="0.01" value="0.5" class="volume-slider">
+                </div>
+            </div>
+        </aside>
+
+        <!-- About Sidebar -->
+        <aside id="aboutSidebar" class="nav-sidebar nav-sidebar--right">
+            <button class="sidebar-close" aria-label="Close about">
+                <ion-icon name="close"></ion-icon>
+            </button>
+            <h2>About</h2>
+            <div class="about-content">
+                <p><strong>Shadow of the Arcane</strong> is a text-based RPG built with vanilla JavaScript — a dark
+                    fantasy adventure where your choices shape the story.</p>
+                <p>Explore a world of arcane mystery, turn-based combat, immersive sound, and branching narrative paths
+                    as you guide Eliza through the shadows.</p>
+                <p>This project started as a way to learn JavaScript while building something I could actually play —
+                    and it grew into a full interactive experience.</p>
+                <a href="https://github.com/otikanelson" target="_blank" rel="noopener noreferrer" class="github-link">
+                    View more projects on GitHub →
+                </a>
+            </div>
+        </aside>
+
+        <!-- Video Background -->
+        <div id="video-container">
+            <video autoplay muted loop id="background-video">
+                <source src="../Assets/Audio/mylivewallpapers-com-Night-Dragon-4K.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Start Button -->
+        <button id="startButton">Start</button>
+    </div>
+
+    <!-- Start Page Scripts -->
+    <script type="module" src="../core/GameSettings.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startButton = document.getElementById('startButton');
+            const settingsBtn = document.getElementById('openSettings');
+            const aboutBtn = document.getElementById('openAbout');
+            const overlay = document.getElementById('sidebarOverlay');
+            const settingsSidebar = document.getElementById('settingsSidebar');
+            const aboutSidebar = document.getElementById('aboutSidebar');
+            const closeBtns = document.querySelectorAll('.sidebar-close');
+
+            // Start game button
+            if (startButton) {
+                startButton.addEventListener('click', function() {
+                    window.location.href = 'game.html';
+                });
+            }
+
+            // Open settings sidebar
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    settingsSidebar.classList.add('open');
+                    overlay.classList.add('visible');
+                    document.body.classList.add('sidebar-active');
+                });
+            }
+
+            // Open about sidebar
+            if (aboutBtn) {
+                aboutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    aboutSidebar.classList.add('open');
+                    overlay.classList.add('visible');
+                    document.body.classList.add('sidebar-active');
+                });
+            }
+
+            // Close sidebars
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', closeSidebars);
+            });
+
+            overlay.addEventListener('click', closeSidebars);
+
+            function closeSidebars() {
+                settingsSidebar.classList.remove('open');
+                aboutSidebar.classList.remove('open');
+                overlay.classList.remove('visible');
+                document.body.classList.remove('sidebar-active');
+            }
+
+            // Escape key to close sidebars
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeSidebars();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

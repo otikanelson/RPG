@@ -127,10 +127,17 @@ class TextManager {
     setupEventListeners() {
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
+                e.preventDefault(); // Prevent page scroll
+                
                 if (this.isTyping) {
                     this.skipTyping();
-                } else if (this.hasNextText) {
-                    document.dispatchEvent(new CustomEvent('nextText'));
+                } else {
+                    // Trigger the continue button click if it exists
+                    if (window.dialogueManager?.currentContinueHandler) {
+                        window.dialogueManager.currentContinueHandler();
+                    } else if (this.hasNextText) {
+                        document.dispatchEvent(new CustomEvent('nextText'));
+                    }
                 }
             }
         });
@@ -239,4 +246,6 @@ class TextManager {
     }
 }
 
-export default TextManager;
+const textManager = new TextManager();
+window.textManager = textManager;
+export default textManager;

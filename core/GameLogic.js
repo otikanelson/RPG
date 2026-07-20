@@ -1,9 +1,19 @@
+/**
+ * src/core/GameLogic.js
+ * Refactored State Core. Manages calculations using flat tokens.
+ * Mapped directly to your updated ITEM_REGISTRY structure.
+ */
+import { ITEM_REGISTRY, getItemFromRegistry } from '../data/ItemRegistry.js';
+
 class GameLogic {
     constructor() {
-        // Get all UI elements
-        this.healthBar = document.querySelector('.healthBar');
-        this.healthText = document.getElementById('healthText');
-        this.goldText = document.getElementById('goldText');
+        // UI Elements Mapping
+        this.healthBar = document.getElementById('healthBarFill');
+        this.sidebarHealthBar = document.getElementById('sidebarHealthBarFill');
+        this.healthText = document.getElementById('healthValue');
+        this.sidebarHealthText = document.getElementById('sidebarHealthValue');
+        this.goldText = document.getElementById('goldValue');
+        this.sidebarGoldText = document.getElementById('sidebarGoldValue');
         this.potionsText = document.getElementById('potionsText');
         this.weaponsText = document.getElementById('weaponsText');
         this.equippedBox = document.querySelector('.equippedBox');
@@ -11,193 +21,110 @@ class GameLogic {
 
         if (!this.healthBar || !this.healthText || !this.goldText) {
             console.error('Required UI elements not found!');
-            return;
+            // Don't return - continue initialization even if some elements are missing
         }
 
-        // Initialize game stats
+        // Live Operational Statistics
         this.stats = {
             health: 100,
             maxHealth: 100,
             gold: 50,
-            xp: 0,    // Start at 0 XP
+            xp: 0,
             level: 1
         };
 
-        // Initialize weapons data
-        this.weapons = {
-            'Rusty Knife': {
-                damage: 5,
-                cost: 0,
-                image: 'Assets/RustyKnife.png',
-                type: 'dagger',
-                rarity: 'common',
-                description: 'A worn blade, better than nothing.'
-            },
-            'Short Sword': {
-                damage: 10,
-                cost: 30,
-                image: 'Assets/shortSword.png',
-                type: 'sword',
-                rarity: 'common',
-                description: 'A reliable steel sword for combat.'
-            },
-            'Steel Axe': {
-                damage: 15,
-                cost: 50,
-                image: 'Assets/Steel Axe.png',
-                type: 'axe',
-                rarity: 'uncommon',
-                description: 'A heavy axe that cleaves through enemies.'
-            },
-            'Bow': {
-                damage: 12,
-                cost: 40,
-                image: 'Assets/bow.png',
-                type: 'ranged',
-                rarity: 'common',
-                description: 'A simple bow for ranged attacks.'
-            }
-        };
-
-        // Initialize armor/accessories data
-        this.armor = {
-            'Leather Vest': {
-                defense: 3,
-                cost: 25,
-                image: 'Assets/inventory.png',
-                type: 'chest',
-                rarity: 'common',
-                description: 'Basic leather protection.'
-            },
-            'Iron Helm': {
-                defense: 5,
-                cost: 35,
-                image: 'Assets/gem.png',
-                type: 'head',
-                rarity: 'uncommon',
-                description: 'Sturdy iron helmet.'
-            }
-        };
-
-        // Initialize consumables data
-        this.consumables = {
-            'Health Potion': {
-                effect: 'heal',
-                value: 10,
-                image: 'Assets/health-potion.png',
-                description: 'Restores 10 HP instantly.'
-            },
-            'Mana Potion': {
-                effect: 'mana',
-                value: 5,
-                image: 'Assets/alchemy.png',
-                description: 'Restores 5 MP (future use).'
-            }
-        };
-
-        // Initialize inventory - MOVED THIS BEFORE setting equippedPotion
+        // Dynamic inventory using your exact registry tokens.
+        // Starts cleanly with ONLY ONE weapon token!
         this.inventory = {
-            healthPotions: 2,
-            manaPotions: 1,
-            weapons: ['Rusty Knife', 'Short Sword', 'Steel Axe', 'Bow'],
-            armor: ['Leather Vest'],
-            equippedWeapon: 'Short Sword',
-            equippedArmor: {
-                head: null,
-                chest: 'Leather Vest',
-                legs: null
+            potions: {
+                'minor_health': 2 // Structured dictionary tracking quantity
             },
-            equippedConsumable: 'Health Potion'
+            weapons: ['rusty_knife'], 
+            special_gear: ['leather_cloak'],
+            special_items: [],
+            equippedWeapon: 'rusty_knife',
+            equippedArmor: {
+                chest: 'leather_cloak',
+                head: null,
+                accessory: null
+            }
         };
 
-        // Initialize GameStorage for save/load functionality
-        this.initializeGameStorage();
+        // Track visited locations for map system
+        this.visitedLocations = [];
 
-        // Initial UI update
+        this.initializeGameStorage();
         this.updateUI();
     }
 
-    /**
-     * Initialize GameStorage system
-     */
     async initializeGameStorage() {
         try {
             const GameStorage = await import('./GameStorage.js');
             this.gameStorage = new GameStorage.default();
-            
-            // Make gameLogic globally accessible for GameStorage
             window.gameLogic = this;
-            
-            console.log('GameStorage initialized successfully');
+            console.log('GameStorage sub-tier operational.');
         } catch (error) {
-            console.error('Failed to initialize GameStorage:', error);
+            console.error('Failed to link internal storage class:', error);
         }
-    }
-
-
-    equipPotion(index) {
-        if (this.inventory.healthPotions > 0) {
-            this.inventory.equippedPotion = index;
-            return true;
-        }
-        return false;
-    }
-
-    useEquippedPotion() {
-        if (this.inventory.equippedPotion !== null && this.inventory.healthPotions > 0) {
-            this.heal(10);
-            this.inventory.healthPotions--;
-            this.inventory.equippedPotion = null;
-            this.updateUI();
-            return true;
-        }
-        return false;
     }
 
     updateUI() {
-        // Update health bar
         const healthPercent = (this.stats.health / this.stats.maxHealth) * 100;
-        this.healthBar.style.width = `${healthPercent}%`;
         
-        // Calculate health bar color
-        const hue = (healthPercent * 1.2);
-        const saturation = 90;
-        const lightness = 45;
-        
-        // Create gradient for health bar
-        this.healthBar.style.background = `linear-gradient(
-            to bottom,
-            hsl(${hue}, ${saturation}%, ${lightness + 10}%) 0%,
-            hsl(${hue}, ${saturation}%, ${lightness}%) 50%,
-            hsl(${hue}, ${saturation}%, ${lightness - 10}%) 100%
-        )`;
+        // Update main health bar
+        if (this.healthBar) {
+            this.healthBar.style.width = `${healthPercent}%`;
+            
+            const hue = (healthPercent * 1.2);
+            this.healthBar.style.background = `linear-gradient(
+                to bottom,
+                hsl(${hue}, 90%, 55%) 0%,
+                hsl(${hue}, 90%, 45%) 50%,
+                hsl(${hue}, 90%, 35%) 100%
+            )`;
+        }
 
-        // Update XP bar
+        // Update sidebar health bar
+        if (this.sidebarHealthBar) {
+            this.sidebarHealthBar.style.width = `${healthPercent}%`;
+        }
+
         const xpBar = document.querySelector('.xpBar');
         if (xpBar) {
-            const xpPercent = (this.stats.xp / 100) * 100;
-            xpBar.style.width = `${xpPercent}%`;
+            xpBar.style.width = `${(this.stats.xp / 100) * 100}%`;
         }
         
-        // Update text elements
-        this.healthText.textContent = this.stats.health.toString();
-        this.goldText.textContent = this.stats.gold.toString();
+        // Update text displays
+        if (this.healthText) this.healthText.textContent = this.stats.health.toString();
+        if (this.sidebarHealthText) this.sidebarHealthText.textContent = this.stats.health.toString();
+        if (this.goldText) this.goldText.textContent = this.stats.gold.toString();
+        if (this.sidebarGoldText) this.sidebarGoldText.textContent = this.stats.gold.toString();
         
-        // Update XP display (showing only level)
-        const xpText = document.getElementById('xpText');
-        if (xpText) {
-            xpText.textContent = this.stats.level.toString();
+        // Update level displays
+        const levelValue = document.getElementById('levelValue');
+        if (levelValue) {
+            levelValue.textContent = this.stats.level.toString();
+        }
+        const sidebarLevelValue = document.getElementById('sidebarLevelValue');
+        if (sidebarLevelValue) {
+            sidebarLevelValue.textContent = this.stats.level.toString();
         }
         
-        // Update inventory display
         if (this.potionsText) {
-            this.potionsText.textContent = `Health Potions: ${this.inventory.healthPotions}`;
+            const minorCount = this.inventory.potions['minor_health'] || 0;
+            const majorCount = this.inventory.potions['major_health'] || 0;
+            this.potionsText.textContent = `Potions: Minor (${minorCount}) Major (${majorCount})`;
         }
+        
         if (this.weaponsText) {
-            this.weaponsText.textContent = this.inventory.weapons.join(', ');
+            // Uses your new getItemFromRegistry helper dynamically!
+            const weaponNames = this.inventory.weapons.map(id => {
+                const item = getItemFromRegistry(id);
+                return item ? item.name : id;
+            });
+            this.weaponsText.textContent = weaponNames.join(', ');
         }
 
-        // Update equipped weapon display
         this.updateEquippedWeapon();
 
         if (window.characterManager?.refreshSidebarStats) {
@@ -205,273 +132,133 @@ class GameLogic {
         }
     }
 
-    /**
-     * Update the equipped weapon display in both the sidebar and modal
-     */
     updateEquippedWeapon() {
         if (!this.inventory.equippedWeapon) return;
-        
-        const weapon = this.weapons[this.inventory.equippedWeapon];
+        const weapon = getItemFromRegistry(this.inventory.equippedWeapon);
         if (!weapon) return;
         
-        // Update sidebar equipped box
         if (this.equippedBox) {
-            this.equippedBox.innerHTML = `<img src="${weapon.image}" alt="${this.inventory.equippedWeapon}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+            // Fallback UI rendering since image paths aren't hardcoded in the new registry
+            this.equippedBox.innerHTML = weapon.image 
+                ? `<img src="${weapon.image}" alt="${weapon.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`
+                : `<span style="font-size: 10px; color: white;">${weapon.name}</span>`;
         }
-        
-        // Update equipment modal if it exists
         window.equipmentModalInstance?.updateEquippedDisplay?.();
     }
 
-    /**
-     * Buy a weapon from the shop
-     * @param {string} weaponName - Name of weapon to purchase
-     * @returns {boolean} - Success status
-     */
-    buyWeapon(weaponName) {
-        const weapon = this.weapons[weaponName];
-        if (!weapon) {
-            console.error('Weapon does not exist:', weaponName);
+    buyWeapon(weaponToken) {
+        const weapon = getItemFromRegistry(weaponToken);
+        // Added a fallback cost calculation since cost isn't in your new registry layout
+        const cost = weapon.cost || 30; 
+
+        if (!weapon || this.inventory.weapons.includes(weaponToken) || !this.canAfford(cost)) {
             return false;
         }
 
-        if (this.inventory.weapons.includes(weaponName)) {
-            console.warn('Weapon already owned:', weaponName);
-            return false;
-        }
-
-        if (!this.canAfford(weapon.cost)) {
-            console.warn('Cannot afford weapon:', weaponName);
-            return false;
-        }
-
-        this.modifyGold(-weapon.cost);
-        this.addToInventory('weapon', weaponName);
+        this.modifyGold(-cost);
+        this.addToInventory('weapons', weaponToken);
         return true;
     }
 
-    /**
-     * Equip a weapon from inventory
-     * @param {string} weaponName - Name of weapon to equip
-     * @returns {boolean} - Success status
-     */
-    equipWeapon(weaponName) {
-        if (!this.inventory.weapons.includes(weaponName)) {
-            console.warn('Weapon not in inventory:', weaponName);
-            return false;
-        }
-        
-        this.inventory.equippedWeapon = weaponName;
+    equipWeapon(weaponToken) {
+        if (!this.inventory.weapons.includes(weaponToken)) return false;
+        this.inventory.equippedWeapon = weaponToken;
         this.updateUI();
         return true;
     }
 
-    /**
-     * Get damage value of currently equipped weapon
-     * @returns {number} - Weapon damage value
-     */
     getWeaponDamage() {
-        const weapon = this.weapons[this.inventory.equippedWeapon];
-        return weapon?.damage || 1;
+        const weapon = getItemFromRegistry(this.inventory.equippedWeapon);
+        return weapon ? weapon.damage : 1;
     }
 
-    /**
-     * Get the type of the equipped weapon
-     * @returns {string} - Weapon type (sword, axe, dagger, ranged) or 'default'
-     */
     getWeaponType() {
-        const weapon = this.weapons[this.inventory.equippedWeapon];
-        return weapon?.type || 'default';
+        const weapon = getItemFromRegistry(this.inventory.equippedWeapon);
+        return weapon ? weapon.type : 'default';
     }
 
-    /**
-     * Add items to inventory
-     * @param {string} itemType - Type of item (healthPotion, weapon, armor)
-     * @param {string|null} item - Item name (for weapons/armor)
-     * @param {number} quantity - Quantity to add
-     */
-    addToInventory(itemType, item = null, quantity = 1) {
-        switch(itemType) {
-            case 'healthPotion':
-                this.inventory.healthPotions += quantity;
-                break;
-            case 'manaPotion':
-                this.inventory.manaPotions = (this.inventory.manaPotions || 0) + quantity;
-                break;
-            case 'weapon':
-                if (item && !this.inventory.weapons.includes(item)) {
-                    this.inventory.weapons.push(item);
-                }
-                break;
-            case 'armor':
-                if (item && !this.inventory.armor.includes(item)) {
-                    this.inventory.armor.push(item);
-                }
-                break;
+    addToInventory(category, itemToken, quantity = 1) {
+        if (!this.inventory[category]) {
+            this.inventory[category] = [];
         }
-        
+
+        if (category === 'potions') {
+            this.inventory.potions[itemToken] = (this.inventory.potions[itemToken] || 0) + quantity;
+        } else {
+            if (!this.inventory[category].includes(itemToken)) {
+                this.inventory[category].push(itemToken);
+            }
+        }
         this.updateUI();
         window.equipmentModalInstance?.updateEquippedDisplay?.();
     }
 
-    /**
-     * Remove items from inventory
-     * @param {string} itemType - Type of item
-     * @param {string|null} item - Item name (for weapons/armor)
-     * @param {number} quantity - Quantity to remove
-     * @returns {boolean} - Success status
-     */
-    removeFromInventory(itemType, item = null, quantity = 1) {
-        switch(itemType) {
-            case 'healthPotion':
-                if (this.inventory.healthPotions >= quantity) {
-                    this.inventory.healthPotions -= quantity;
-                    window.equipmentModalInstance?.populateConsumables?.();
-                    this.updateUI();
-                    return true;
+    removeFromInventory(category, itemToken, quantity = 1) {
+        if (!this.inventory[category]) return false;
+
+        if (category === 'potions') {
+            if ((this.inventory.potions[itemToken] || 0) >= quantity) {
+                this.inventory.potions[itemToken] -= quantity;
+                this.updateUI();
+                return true;
+            }
+        } else {
+            const idx = this.inventory[category].indexOf(itemToken);
+            if (idx > -1) {
+                this.inventory[category].splice(idx, 1);
+                if (this.inventory.equippedWeapon === itemToken) {
+                    this.inventory.equippedWeapon = this.inventory.weapons[0] || null;
                 }
-                return false;
-                
-            case 'manaPotion':
-                if ((this.inventory.manaPotions || 0) >= quantity) {
-                    this.inventory.manaPotions -= quantity;
-                    window.equipmentModalInstance?.populateConsumables?.();
-                    this.updateUI();
-                    return true;
-                }
-                return false;
-                
-            case 'weapon':
-                if (!item) return false;
-                const weaponIndex = this.inventory.weapons.indexOf(item);
-                if (weaponIndex > -1) {
-                    this.inventory.weapons.splice(weaponIndex, 1);
-                    
-                    // If removing equipped weapon, equip another or set to null
-                    if (this.inventory.equippedWeapon === item) {
-                        this.inventory.equippedWeapon = this.inventory.weapons[0] || null;
-                    }
-                    
-                    window.equipmentModalInstance?.updateEquippedDisplay?.();
-                    window.equipmentModalInstance?.populateWeapons?.();
-                    this.updateUI();
-                    return true;
-                }
-                return false;
-                
-            case 'armor':
-                if (!item) return false;
-                const armorIndex = this.inventory.armor.indexOf(item);
-                if (armorIndex > -1) {
-                    this.inventory.armor.splice(armorIndex, 1);
-                    
-                    // If removing equipped armor, unequip it
-                    const armorData = this.armor[item];
-                    if (armorData && this.inventory.equippedArmor[armorData.type] === item) {
-                        this.inventory.equippedArmor[armorData.type] = null;
-                    }
-                    
-                    window.equipmentModalInstance?.populateArmor?.();
-                    window.equipmentModalInstance?.populateEquippedArmor?.();
-                    this.updateUI();
-                    return true;
-                }
-                return false;
+                this.updateUI();
+                return true;
+            }
         }
-        
         return false;
     }
 
-    /**
-     * Use a health potion to restore HP
-     * @returns {boolean} - Success status
-     */
-    useHealthPotion() {
-        if (this.inventory.healthPotions <= 0) return false;
+    usePotion(potionToken = 'minor_health') {
+        const count = this.inventory.potions[potionToken] || 0;
+        if (count <= 0) return false;
         
-        const consumable = this.consumables['Health Potion'];
-        this.heal(consumable?.value || 10);
-        this.removeFromInventory('healthPotion');
+        const potionConfig = getItemFromRegistry(potionToken);
+        const healValue = potionConfig?.effect?.value || 20;
+
+        this.heal(healValue);
+        this.removeFromInventory('potions', potionToken, 1);
         return true;
     }
 
-    /**
-     * Buy health potion from shop
-     * @param {number} cost - Cost of potion
-     * @returns {boolean} - Success status
-     */
-    buyHealthPotion(cost = 10) {
-        if (!this.canAfford(cost)) return false;
-        
-        this.modifyGold(-cost);
-        this.addToInventory('healthPotion');
-        return true;
-    }
-
-    /**
-     * Get total defense from equipped armor
-     * @returns {number} - Total defense value
-     */
     getTotalDefense() {
-        let totalDefense = 0;
-        const equippedArmor = this.inventory.equippedArmor;
-        
-        for (const slot in equippedArmor) {
-            const armorName = equippedArmor[slot];
-            if (armorName && this.armor[armorName]) {
-                totalDefense += this.armor[armorName].defense;
+        let defense = 0;
+        for (const slot in this.inventory.equippedArmor) {
+            const id = this.inventory.equippedArmor[slot];
+            if (id) {
+                const gear = getItemFromRegistry(id);
+                if (gear && gear.defense) defense += gear.defense;
             }
         }
-        
-        return totalDefense;
+        return defense;
     }
 
-    /**
-     * Check if player has an item in inventory
-     * @param {string} itemType - Type of item
-     * @param {string} itemName - Name of item
-     * @returns {boolean} - Whether item is owned
-     */
-    hasItem(itemType, itemName) {
-        switch(itemType) {
-            case 'weapon':
-                return this.inventory.weapons.includes(itemName);
-            case 'armor':
-                return this.inventory.armor.includes(itemName);
-            case 'healthPotion':
-                return this.inventory.healthPotions > 0;
-            case 'manaPotion':
-                return (this.inventory.manaPotions || 0) > 0;
-            default:
-                return false;
+    hasItem(category, itemToken) {
+        if (category === 'potions') {
+            return (this.inventory.potions[itemToken] || 0) > 0;
         }
+        return this.inventory[category]?.includes(itemToken) || false;
     }
 
-    /**
-     * Equip armor piece
-     * @param {string} armorName - Name of armor to equip
-     * @returns {boolean} - Success status
-     */
-    equipArmor(armorName) {
-        if (!this.inventory.armor.includes(armorName)) return false;
+    equipArmor(armorToken) {
+        if (!this.inventory.special_gear.includes(armorToken)) return false;
+        const gearData = getItemFromRegistry(armorToken);
+        if (!gearData || !gearData.slot) return false;
         
-        const armorData = this.armor[armorName];
-        if (!armorData) return false;
-        
-        this.inventory.equippedArmor[armorData.type] = armorName;
+        this.inventory.equippedArmor[gearData.slot] = armorToken;
         this.updateUI();
         return true;
     }
 
-    /**
-     * Take damage with armor defense calculation
-     * @param {number} amount - Raw damage amount
-     * @returns {boolean} - Whether player survived
-     */
     takeDamage(amount) {
-        const defense = this.getTotalDefense();
-        const actualDamage = Math.max(1, amount - defense); // Minimum 1 damage
-        
+        const actualDamage = Math.max(1, amount - this.getTotalDefense());
         this.stats.health = Math.max(0, this.stats.health - actualDamage);
         this.updateUI();
         return this.stats.health > 0;
@@ -487,53 +274,24 @@ class GameLogic {
         this.updateUI();
     }
 
-    canAfford(cost) {
-        return this.stats.gold >= cost;
-    }
+    canAfford(cost) { return this.stats.gold >= cost; }
 
     addExperience(amount) {
         this.stats.xp += amount;
-        
-        // Check for level up
-        if (this.stats.xp >= 100) {
-            this.levelUp();
-        }
-        
+        if (this.stats.xp >= 100) this.levelUp();
         this.updateUI();
         return this.stats.level;
     }
 
     levelUp() {
         this.stats.level += 1;
-        this.stats.xp = 0; // Reset XP to 0
-        
-        // Level up benefits
+        this.stats.xp = 0;
         this.stats.maxHealth += 10;
-        this.stats.health = this.stats.maxHealth; // Heal to full on level up
-        
-        return {
-            newLevel: this.stats.level,
-            maxHealth: this.stats.maxHealth
-        };
-    }
-
-    getInventoryCount(itemType) {
-        switch(itemType) {
-            case 'healthPotion':
-                return this.inventory.healthPotions;
-            case 'weapons':
-                return this.inventory.weapons.length;
-            default:
-                return 0;
-        }
+        this.stats.health = this.stats.maxHealth;
+        return { newLevel: this.stats.level, maxHealth: this.stats.maxHealth };
     }
 }
 
-// Create a single instance of GameLogic
 const gameLogic = new GameLogic();
-
-// Make it globally accessible
 window.gameLogic = gameLogic;
-
-// Export for module usage
 export default gameLogic;

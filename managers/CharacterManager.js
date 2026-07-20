@@ -1,4 +1,5 @@
 import CharacterComponent from '../ui/CharacterComponent.js';
+import { getImagePath, VISUAL_ASSETS } from '../systems/VisualAssets.js';
 
 class CharacterManager {
     constructor() {
@@ -25,51 +26,51 @@ class CharacterManager {
 
         this.locations = {
             "Town Square": {
-                image: "Assets/townsquare.webp",
+                image: getImagePath('LOCATIONS', 'TOWN_SQUARE'),
                 description: "Once a bustling center of commerce, now a haunting reminder of what was lost. Crumbling buildings and ash-covered streets tell tales of recent devastation.",
-                soundtrack: "Assets/audio/townsquare-ambient.mp3",
+                soundtrack: "Assets/townsquare-ambient.mp3",
                 ambientSounds: ["crowd_murmur", "distant_bells"]
             },
             "Dark Alley": {
-                image: "Assets/locations/darkalley.webp",
+                image: getImagePath('LOCATIONS', 'DARK_ALLEY'),
                 description: "Narrow passages between towering buildings where shadows seem to move of their own accord. The air here is thick with tension.",
-                soundtrack: "Assets/audio/alley-ambient.mp3",
+                soundtrack: "Assets/alley-ambient.mp3",
                 ambientSounds: ["dripping_water", "distant_echoes"]
             },
             "Merchant's Shop": {
-                image: "Assets/locations/merchantshop.webp",
+                image: getImagePath('LOCATIONS', 'MERCHANT_SHOP'),
                 description: "A cramped but well-stocked shop, its shelves lined with curiosities and weapons. The air smells of leather and metal.",
-                soundtrack: "Assets/audio/shop-theme.mp3",
+                soundtrack: "Assets/shop-theme.mp3",
                 ambientSounds: ["creaking_wood", "tinkling_bells"]
             },
             "Merchant's shop": {
-                image: "Assets/locations/merchantshop.webp",
+                image: getImagePath('LOCATIONS', 'MERCHANT_SHOP'),
                 description: "A cramped but well-stocked shop, its shelves lined with curiosities and weapons. The air smells of leather and metal.",
-                soundtrack: "Assets/audio/shop-theme.mp3",
+                soundtrack: "Assets/shop-theme.mp3",
                 ambientSounds: ["creaking_wood", "tinkling_bells"]
             },
             "Hidden Passages": {
-                image: "Assets/locations/hiddenpassages.webp",
+                image: getImagePath('LOCATIONS', 'HIDDEN_PASSAGES'),
                 description: "Secret tunnels beneath the bazaar, known only to a select few. Water drips from ancient stones overhead.",
-                soundtrack: "Assets/audio/caves-ambient.mp3",
+                soundtrack: "Assets/caves-ambient.mp3",
                 ambientSounds: ["water_drops", "distant_rumbles"]
             },
             "Shard Chamber": {
-                image: "Assets/locations/shardchamber.webp",
+                image: getImagePath('LOCATIONS', 'SHARD_CHAMBER'),
                 description: "A vast circular chamber where the shard's power pulses visibly in the air. Ancient runes circle the walls.",
-                soundtrack: "Assets/audio/chamber-theme.mp3",
+                soundtrack: "Assets/chamber-theme.mp3",
                 ambientSounds: ["crystal_hum", "energy_crackle"]
             },
             "Bazaar Streets": {
-                image: "Assets/BazaarStreets.webp",
+                image: getImagePath('LOCATIONS', 'BAZAAR_STREETS'),
                 description: "Once-bustling market streets now eerily empty. Abandoned stalls and scattered wares tell of a hasty evacuation.",
-                soundtrack: "Assets/audio/bazaar-ambient.mp3",
+                soundtrack: "Assets/bazaar-ambient.mp3",
                 ambientSounds: ["wind_through_stalls", "distant_voices"]
             },
             "Journey": {
-                image: "Assets/Journey.webp",
+                image: getImagePath('LOCATIONS', 'JOURNEY'),
                 description: "The winding paths between destinations, each step bringing new dangers and discoveries.",
-                soundtrack: "Assets/audio/journey-theme.mp3",
+                soundtrack: "Assets/journey-theme.mp3",
                 ambientSounds: ["footsteps", "wilderness_ambient"]
             }
         };
@@ -89,7 +90,7 @@ class CharacterManager {
         this.characters = {
             "Player": {
                 name: "Rift Walker",
-                image: "Assets/thief.png",
+                image: getImagePath('CHARACTERS', 'THIEF'),
                 description: "An avatar from another world, summoned through the rift to restore balance to this realm.",
                 level: "Avatar",
                 isPlayer: true,
@@ -97,56 +98,56 @@ class CharacterManager {
             },
             "V'ial Imdall": {
                 name: "V'ial Imdall",
-                image: "Assets/V'ial Imdall.jpg",
+                image: getImagePath('CHARACTERS', 'VIAL_IMDALL'),
                 description: "A powerful archmage and guardian of the realm. V'ial Imdall bears the weight of countless centuries, his weathered face marked by the wisdom of ages. His robes, adorned with intricate runes, pulse with barely contained magical energy. Despite his formidable presence, a hint of weariness shows in his ancient eyes, suggesting the burden of knowledge too heavy for most to bear.",
                 level: "Legendary",
                 bio: "A powerful mage tasked with maintaining peace in the realm."
             },
             "Eliza": {
                 name: "Eliza",
-                image: "Assets/Eliza.png",
+                image: getImagePath('CHARACTERS', 'ELIZA'),
                 description: "A mysterious woman whose beauty belies her enigmatic nature. Eliza's presence carries an otherworldly grace, her movements fluid and deliberate. Her knowledge of ancient artifacts and forgotten lore hints at a past deeply intertwined with the realm's most guarded secrets. The gentle smile she wears often masks calculations happening behind her keen eyes.",
                 level: "Unknown",
                 bio: "A mysterious woman with knowledge of ancient artifacts."
             },
             "MerchantRagnor": {
                 name: "Merchant Ragnor",
-                image: "Assets/MerchantRagnor.webp",
+                image: getImagePath('CHARACTERS', 'MERCHANT_RAGNOR'),
                 description: "A cunning merchant whose wretched appearance conceals his sharp business acumen. Despite his diminutive stature, Ragnor's presence fills any room he occupies. His shop, while modest in appearance, holds treasures and weapons of considerable power. Years of trading in both legitimate and questionable goods have left him with an extensive network of contacts.",
                 level: "Common",
                 bio: "A shrewd merchant dealing in weapons and potions."
             },
             "ShadowBeast": {
                 name: "Shadow Beast",
-                image: "Assets/ShadowBeast.webp",
+                image: getImagePath('MONSTERS', 'SHADOW_BEAST'),
                 description: "A nightmarish creature born of darkness and malice. Its form shifts and writhes like living shadow, defying natural law. Red eyes gleam with predatory intelligence, and its very presence seems to dim the light around it.",
                 level: "Rare",
                 bio: "A creature of shadow and malice."
             },
             "BloodBeast": {
                 name: "Blood Beast",
-                image: "Assets/BloodBeast.webp",
+                image: getImagePath('MONSTERS', 'BLOOD_BEAST'),
                 description: "A horrifying amalgamation of flesh and fury. Its crimson form pulses with unnatural life, each movement leaving trails of visceral energy. The air around it thrums with malevolent power.",
                 level: "Elite",
                 bio: "A monstrous entity of blood and rage."
             },
             "HellDogs": {
                 name: "Hell Dogs",
-                image: "Assets/HellDogs.webp",
+                image: getImagePath('MONSTERS', 'HELL_DOGS'),
                 description: "Infernal hounds whose fur burns with hellfire. Their eyes glow like embers, and their barks echo with otherworldly resonance. These fearsome beasts hunt in packs, coordinating their attacks with terrifying intelligence.",
                 level: "Rare",
                 bio: "Hellish beasts that hunt in packs."
             },
             "Sylas": {
                 name: "Sylas",
-                image: "Assets/Sylas.webp",
+                image: getImagePath('CHARACTERS', 'SYLAS'),
                 description: "A shadow walker and master of the bazaar's hidden paths. Sylas moves with the practiced grace of one who has spent years navigating the darkest corners of the city. His tattered clothes and easy smile belie both his skills and the true extent of his knowledge. Every word he speaks seems carefully chosen, every gesture calculated.",
                 level: "Rare",
                 bio: "A skilled rogue with intimate knowledge of the bazaar."
             },
             "ShardWarden": {
                 name: "Shard Warden",
-                image: "Assets/ShardWarden.webp",
+                image: getImagePath('MONSTERS', 'SHARD_WARDEN'),
                 description: "A guardian bound to the shard chamber, its crystalline form radiating ancient power. Every movement echoes with the weight of duty and the fury of a protector scorned.",
                 level: "Elite",
                 bio: "A sentinel of the shard chamber."
@@ -444,4 +445,6 @@ class CharacterManager {
     }
 }
 
-export default CharacterManager;
+const characterManager = new CharacterManager();
+window.characterManager = characterManager;
+export default characterManager;

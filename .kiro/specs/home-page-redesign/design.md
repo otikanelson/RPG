@@ -390,7 +390,7 @@ User Interacts with Start Page
     
     <div id="video-container">
         <video autoplay muted loop id="background-video">
-            <source src="Assets/mylivewallpapers-com-Night-Dragon-4K.mp4" type="video/mp4">
+            <source src="Assets/Images/mylivewallpapers-com-Night-Dragon-4K.mp4" type="video/mp4">
         </video>
     </div>
     

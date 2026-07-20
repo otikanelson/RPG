@@ -1,0 +1,197 @@
+/* ============================================
+   BASE STYLES - Core resets and variables
+   ============================================ */
+
+/* ========== FONTS ========== */
+@font-face {
+    font-family: 'seagram';
+    src: url('../Assets/fonts/Seagram\ tfb.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'EnglishTowne';
+    src: url('../Assets/fonts/EnglishTowne.ttf') format('truetype'); 
+}
+
+/* ========== ROOT VARIABLES ========== */
+:root {
+    /* Color Palette */
+    --primary-blue: #007BFF;
+    --primary-blue-dark: #0056b3;
+    --primary-blue-light: #4a90e2;
+    --secondary-purple: #5c3d9e;
+    --secondary-purple-dark: #3d2668;
+    
+    --success-green: #0ec20e;
+    --success-green-dark: #0a9b0a;
+    --danger-red: #dc3545;
+    --danger-red-dark: #a71d2a;
+    --warning-yellow: #f6c204;
+    
+    --text-light: #EdddE0;
+    --text-dark: #11135c;
+    --text-blue: #074bb1;
+    --text-cyan: #0195ff;
+    
+    --bg-dark: #0a0808;
+    --bg-darker: rgba(10, 10, 10, 0.87);
+    --bg-semi-dark: rgba(0, 0, 0, 0.589);
+    --bg-overlay: rgba(0, 0, 0, 0.5);
+    
+    /* Spacing */
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
+    
+    /* Border Radius */
+    --radius-sm: 5px;
+    --radius-md: 10px;
+    --radius-lg: 20px;
+    --radius-xl: 30px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 5px 5px 10px rgba(0, 0, 0, 0.459);
+    --shadow-glow: 0 0 10px rgba(74, 144, 226, 0.5);
+}
+
+/* ========== BASE STYLES ========== */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Seagram', 'Poppins', sans-serif;
+}
+
+body {
+    overflow: hidden;
+    scrollbar-width: none;
+    background: #000;
+    margin: 0;
+    padding: 0;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* ========== UTILITY CLASSES ========== */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease;
+}
+
+.scale-in {
+    animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.glow {
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(74, 144, 226, 1);
+    }
+}
+
+/* ========== COMMON ANIMATIONS ========== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 10px 30px rgba(0, 123, 255, 0.4);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 123, 255, 0.6);
+    }
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========== ACCESSIBILITY ========== */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+*:focus {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+}
+
+button:focus,
+a:focus {
+    outline: 3px solid var(--primary-blue);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+    .navBar, .settings, .options, .dialogueBtns {
+        display: none;
+    }
+}
